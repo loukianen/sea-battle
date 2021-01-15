@@ -1,0 +1,138 @@
+:root {
+  --border-thick: 3px;
+  --border-thin: 1px;
+  --ship-border: #024C68;
+  --bg-field: #e3f2fd;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+  
+    vertical-align: middle;
+  }
+
+.img-box {
+  align-items: center;
+}
+
+.field {
+  width: 350px;
+  height: 350px;
+  /* background-color:#e3f2fd; */
+}
+
+#centerField {
+  width: 300px;
+  height: 350px;
+  background-color: pink;
+}
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+}
+
+.cell-top-left {
+  border-left: var(--border-thick) solid var(--info);
+  border-top: var(--border-thick) solid var(--info);
+  border-right: var(--border-thin) solid var(--info);
+  border-bottom: var(--border-thin) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-top-right {
+  border-left: var(--border-thin) solid var(--info);
+  border-top: var(--border-thick) solid var(--info);
+  border-right: var(--border-thick) solid var(--info);
+  border-bottom: var(--border-thin) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-top {
+  border-left: var(--border-thin) solid var(--info);
+  border-top: var(--border-thick) solid var(--info);
+  border-right: var(--border-thin) solid var(--info);
+  border-bottom: var(--border-thin) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-bottom-left {
+  border-left: var(--border-thick) solid var(--info);
+  border-top: var(--border-thin) solid var(--info);
+  border-right: var(--border-thin) solid var(--info);
+  border-bottom: var(--border-thick) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-bottom-right {
+  border-left: var(--border-thin) solid var(--info);
+  border-top: var(--border-thin) solid var(--info);
+  border-right: var(--border-thick) solid var(--info);
+  border-bottom: var(--border-thick) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-bottom {
+  border-left: var(--border-thin) solid var(--info);
+  border-top: var(--border-thin) solid var(--info);
+  border-right: var(--border-thin) solid var(--info);
+  border-bottom: var(--border-thick) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-left {
+  border-left: var(--border-thick) solid var(--info);
+  border-top: var(--border-thin) solid var(--info);
+  border-right: var(--border-thin) solid var(--info);
+  border-bottom: var(--border-thin) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-right {
+  border-left: var(--border-thin) solid var(--info);
+  border-top: var(--border-thin) solid var(--info);
+  border-right: var(--border-thick) solid var(--info);
+  border-bottom: var(--border-thin) solid var(--info);
+  background-color: var(--bg-field);
+}
+
+.cell-inside {
+  border: var(--border-thin) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
+  background-color: var(--bg-field);
+}
+
+.cell {
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.ship {
+  background-color: var(--info);
+  border: var(--border-thin) solid var(--ship-border);
+}
+
+.killed-ship {
+  color: var(--danger);
+  font-weight: bold;
+  text-align: center;
+  border: var(--border-thick) solid var(--danger);
+  background-color: var(--bg-field);
+}
+
+.shoted-field {
+  font-weight: bold;
+  text-align: center;
+  color: var(--ship-border);
+  background-color: var(--bg-field);
+}
+
+.color-ship-border {
+  color: var(--ship-border);
+}
