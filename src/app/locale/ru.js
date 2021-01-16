@@ -20,5 +20,9 @@ export default {
       i: 'и',
       j: 'к',
     },
+    shipsTable: {
+      header: 'Доступные корабли',
+      unit: 'шт.',
+    },
   },
 };

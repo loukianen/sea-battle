@@ -26,19 +26,58 @@
           </div>
         </div>
         <div class="container justify-content-around mt-5">
-          <div class="row">
-            <div class="col-4 text-center color-ship-border h3" id="enemyFlot"></div>
-            <div class="col-4"></div>
-            <div class="col-4 text-center color-ship-border h3" id="userFlot"></div>
-          </div>
-          <div class="row">
-            <div class="col field rounded grid-12" id="enemyField"></div>
-          
-            <div id="centerField" class="rounded col">
-              <div class=""></div>
+          <div class="row d-flex text-center">
+            <div class="field-container">
+              <div class="text-center color-ship-border h3" id="enemyFlot"></div>
+              <div class="col field rounded grid-12" id="enemyField"></div>
             </div>
-            <div class="field rounded grid-12 col" id="userField">
-
+            <div id="centerField" class="col d-flex flex-column ">
+              <div class="messagefield text-center rounded"></div>
+              <div class="d-flex flex-column shipsfield text-center rounded">
+                <h5 class="mt-2 color-ship-border">Avialable ships</h5>
+                <table class="table table-borderless color-ship-border">
+                  <tbody>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>1</td>
+                      <td>pcs</td>
+                    </tr>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>2</td>
+                      <td>pcs</td>
+                    </tr>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>3</td>
+                      <td>pcs</td>
+                    </tr>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>4</td>
+                      <td>pcs</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="field-container">
+              <div class="text-center color-ship-border h3" id="userFlot"></div>
+              <div class="field rounded grid-12 col" id="userField"></div>
             </div>
           </div>
         </div>

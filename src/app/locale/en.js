@@ -20,5 +20,9 @@ export default {
       i: 'i',
       j: 'j',
     },
+    shipsTable: {
+      header: 'Available ships',
+      unit: 'pcs',
+    },
   },
 };

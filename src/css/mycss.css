@@ -17,15 +17,33 @@ img {
 }
 
 .field {
-  width: 350px;
-  height: 350px;
-  /* background-color:#e3f2fd; */
+  width: 360px;
+  height: 360px;
+}
+
+.field-container {
+  width: 360px;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 #centerField {
-  width: 300px;
-  height: 350px;
-  background-color: pink;
+  justify-content: center;
+}
+
+.messagefield {
+  width: 100%;
+  height: 25%;
+  min-height: 70px;
+  border: 3px solid var(--info);
+}
+
+.shipsfield {
+  width: 100%;
+  height: 75%;
+  min-height: 250px;
+  border: 3px solid var(--info);
+  justify-content: center;
 }
 
 .grid-12 {
@@ -111,6 +129,11 @@ img {
   text-align: center;
   font-weight: bold;
   font-style: italic;
+}
+
+.cell30x30 {
+  height: 25px;
+  width: 25px;
 }
 
 .ship {

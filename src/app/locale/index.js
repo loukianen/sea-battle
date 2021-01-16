@@ -2,31 +2,37 @@ import i18next from 'i18next';
 import en from './en';
 import ru from './ru';
 
-
-const setLanguage = (language = window.navigator.language) => {
+/* const setLanguage = (language = window.navigator.language) => {
   switch (language) {
     case 'ru':
       return 'ru';
     default:
       return 'en';
   }
-};
+}; */
 
 const applyUi = () => {
   const headElement = document.querySelector('head');
-  const titleElement = document.querySelector('title');
+  const titleElement = headElement.querySelector('title');
   titleElement.textContent = i18next.t('ui.mainHeader');
   const placesForFilling = ['mainHeader', 'enemyFlot', 'userFlot', 'navStart', 'navOptions', 'navLanguage'];
   placesForFilling.forEach((el) => {
     const element = document.getElementById(el);
     element.textContent = i18next.t(`ui.${el}`);
   });
+  const shipsTableElement = document.querySelector('h5');
+  shipsTableElement.textContent = i18next.t('shipsTable.header');
+  const shipTableRows = document.querySelectorAll('tr');
+  shipTableRows.forEach((el) => {
+    const unit = el.lastElementChild;
+    unit.textContent = i18next.t('shipsTable.unit');
+  });
 };
 
 const makeFirstRow = () => {
   const letters = [null, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', null];
   return letters.map((letter) => {
-    const node = document.createElement("div");
+    const node = document.createElement('div');
     node.classList.add('cell');
     if (letter !== null) {
       node.textContent = i18next.t(`field.${letter}`);
@@ -37,7 +43,7 @@ const makeFirstRow = () => {
 
 const makeRow = (styles, number) => {
   const nodes = styles.map((letter) => {
-    const node = document.createElement("div");
+    const node = document.createElement('div');
     if (letter !== null) {
       node.classList.add(letter);
     }
@@ -57,7 +63,7 @@ const makeMiddleRows = () => {
     middleRows = [...middleRows, ...curRow];
     rowCount += 1;
   }
-    return middleRows;
+  return middleRows;
 };
 
 const renderBattleField = (node) => {
@@ -71,7 +77,7 @@ const renderBattleField = (node) => {
 
 export default () => {
   const resources = { en, ru };
-  
+
   i18next.init({
     lng: 'ru', // setLanguage(), // You can set language: setLanguage('ru')). Default - locale.
     debug: true,
