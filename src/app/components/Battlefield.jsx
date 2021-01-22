@@ -36,7 +36,13 @@ class Battlefield extends React.Component {
       <div className="field-container">
         <div className="text-center color-ship-border h3" id={flotId}>{i18next.t(`ui.${flotId}`)}</div>
         <div className="col field rounded mb-3 grid-11" id={fieldId}>
-          {cellIds.map((id) => (<div key={id} className={cells[id].style}>{cells[id].value}</div>))}
+          {cellIds.map((id) => {
+            const stateValue = cells[id].value;
+            const cellValue = stateValue !== null && typeof stateValue !=='number'
+              ? i18next.t(`field.${stateValue}`)
+              : stateValue;
+            return (<div key={id} className={cells[id].style}>{cellValue}</div>);
+          })}
         </div>
       </div>
     );
