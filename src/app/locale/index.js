@@ -1,4 +1,5 @@
 import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './en';
 import ru from './ru';
 
@@ -11,6 +12,12 @@ import ru from './ru';
   }
 }; */
 
+const changeLanguage = (event) => {
+  event.preventDefault();
+  const language = event.target.getAttribute('lang');
+  i18next.changeLanguage(language, () => null);
+}
+
 const applyUi = () => {
   const headElement = document.querySelector('head');
   const titleElement = headElement.querySelector('title');
@@ -20,6 +27,14 @@ const applyUi = () => {
     const element = document.getElementById(el);
     element.textContent = i18next.t(`ui.${el}`);
   });
+
+  const russian = document.getElementById('russianLanguage');
+  const english = document.getElementById('englishLanguage');
+  russian.textContent = i18next.t('ui.russianLanguage');
+  english.textContent = i18next.t('ui.englishLanguage');
+  russian.addEventListener('click', changeLanguage);
+  english.addEventListener('click', changeLanguage);
+
   const shipsTableElement = document.querySelector('h5');
   shipsTableElement.textContent = i18next.t('shipsTable.header');
   const shipTableRows = document.querySelectorAll('tr');
@@ -56,9 +71,10 @@ const makeRow = (styles, number) => {
 };
 
 const makeMiddleRows = () => {
+  const fieldSide = 10;
   let rowCount = 2;
   let middleRows = [];
-  while (rowCount < 10) {
+  while (rowCount < fieldSide) {
     const curRow = makeRow(['cell', 'cell-left', ...Array(8).fill('cell-inside'), 'cell-right', null], rowCount);
     middleRows = [...middleRows, ...curRow];
     rowCount += 1;
@@ -67,19 +83,22 @@ const makeMiddleRows = () => {
 };
 
 const renderBattleField = (node) => {
+  const fieldSide = 10;
   const firstRow = makeFirstRow();
   const secondRow = makeRow(['cell', 'cell-top-left', ...Array(8).fill('cell-top'), 'cell-top-right', null], 1);
   const middleRows = makeMiddleRows();
-  const eleventhRow = makeRow(['cell', 'cell-bottom-left', ...Array(8).fill('cell-bottom'), 'cell-bottom-right', null], 10);
-  const twelvthRow = makeRow([...Array(12).fill(null)]);
+  const eleventhRow = makeRow(['cell', 'cell-bottom-left', ...Array(fieldSide - 2).fill('cell-bottom'), 'cell-bottom-right', null], fieldSide);
+  const twelvthRow = makeRow([...Array(fieldSide + 2).fill(null)]);
   node.append(...firstRow, ...secondRow, ...middleRows, ...eleventhRow, ...twelvthRow);
 };
 
 export default () => {
   const resources = { en, ru };
 
-  i18next.init({
-    lng: 'ru', // setLanguage(), // You can set language: setLanguage('ru')). Default - locale.
+  i18next
+  .use(LanguageDetector)
+  .init({
+    fallbackLng: 'en',
     debug: true,
     resources,
   });

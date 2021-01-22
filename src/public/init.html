@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/png/ico" />
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="css/mycss.css">
+        <title>Sea battle</title>
+    </head>
+    <body class="d-flex flex-column min-vh-100 mt-3">
+      <main>
+        <div class="container border-bottom border-info">
+          <div class="d-inline-flex align-content-center w-100">
+            <div class="d-flex img-box">
+              <img class="rounded" id="logo" src="img/logo_356_x_200.jpg" alt="ship">
+            </div>
+            <div class="flex-column align-content-end w-100">
+              <div class="display-1 text-info text-center w-100" id="mainHeader"></div>
+              <ul class="nav flex-row justify-content-end">
+                <li class="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
+                  <a class="btn" type="button" id="navStart" aria-haspopup="true" aria-expanded="false"></a>
+                </li>
+                <li class="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
+                  <a class="btn" type="button" id="navOptions" aria-haspopup="true" aria-expanded="false"></a>
+                </li>
+                <li class="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
+                  <a class="btn dropdown-toggle p-o" type="button" id="navLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                  <div class="dropdown-menu" aria-labelledby="languageMenuButton">
+                    <div class="dropdown-item d-flex flex-row">
+                      <img class="flag border border-info rounded" src="img/russia_fl.png" alt="russian flag">
+                      <a class="dropdown-item" href="#" lang="ru" id="russianLanguage"></a>
+                    </div>
+                    <div class="dropdown-item d-flex flex-row">
+                      <img class="flag border border-info rounded" src="img/united-kingdom_fl.png" alt="british flag">
+                      <a class="dropdown-item" href="#" lang="en" id="englishLanguage"></a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="container justify-content-around mt-5">
+          <div class="row d-flex text-center">
+            <div class="field-container">
+              <div class="text-center color-ship-border h3" id="enemyFlot"></div>
+              <div class="col field rounded grid-12" id="enemyField"></div>
+            </div>
+            <div id="centerField" class="col d-flex flex-column ">
+              <div class="messagefield text-center rounded"></div>
+              <div class="d-flex flex-column shipsfield text-center rounded">
+                <h5 class="mt-2 color-ship-border">Avialable ships</h5>
+                <table class="table table-borderless color-ship-border">
+                  <tbody>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>1</td>
+                      <td>pcs</td>
+                    </tr>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>2</td>
+                      <td>pcs</td>
+                    </tr>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>3</td>
+                      <td>pcs</td>
+                    </tr>
+                    <tr>
+                      <td class="d-flex flex-row">
+                        <div class="ship cell30x30 rounded"></div>
+                      </td>
+                      <td>4</td>
+                      <td>pcs</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="field-container">
+              <div class="text-center color-ship-border h3" id="userFlot"></div>
+              <div class="field rounded grid-12 col" id="userField"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer class="footer border-top py-3 mt-5">
+        <div class="container-xl">
+          <div class="text-center color-ship-border">created by Konstantin Lukyanenok</div>
+        </div>
+      </footer>
+    </body>
+</html>

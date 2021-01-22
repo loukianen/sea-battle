@@ -7,6 +7,8 @@ export default {
       navStart: 'Начать игру',
       navOptions: 'Настройки',
       navLanguage: 'Язык',
+      russianLanguage: 'Русский',
+      englishLanguage: 'English',
     },
     field: {
       a: 'а',

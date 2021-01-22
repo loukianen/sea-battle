@@ -7,6 +7,8 @@ export default {
       navStart: 'Start game',
       navOptions: 'Options',
       navLanguage: 'Language',
+      russianLanguage: 'Русский',
+      englishLanguage: 'English',
     },
     field: {
       a: 'a',

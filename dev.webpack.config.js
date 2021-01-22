@@ -33,11 +33,20 @@ module.exports = {
   devServer: {
     contentBase: './dist',
     port: 7800,
-    historyApiFallback: false,
-    inline: true,
+     /* historyApiFallback: false,
+    inline: true, */
+    watchContentBase: true,
+    progress: true
   },
   module: {
     rules: [
+      {
+        test: /\.(js|jsx)$/i,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
       {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],

@@ -46,10 +46,10 @@ img {
   justify-content: center;
 }
 
-.grid-12 {
+.grid-11 {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(12, 1fr);
+  grid-template-columns: repeat(11, 1fr);
+  grid-template-rows: repeat(11, 1fr);
 }
 
 .cell-top-left {
@@ -158,4 +158,10 @@ img {
 
 .color-ship-border {
   color: var(--ship-border);
+}
+
+.flag {
+  width: 25px;
+  height: 20px;
+  margin: 5px 0;
 }
