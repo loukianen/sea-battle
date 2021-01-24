@@ -16,7 +16,7 @@ const changeLanguage = (event) => {
   event.preventDefault();
   const language = event.target.getAttribute('lang');
   i18next.changeLanguage(language, () => null);
-}
+};
 
 const applyUi = () => {
   const headElement = document.querySelector('head');
@@ -96,12 +96,12 @@ export default () => {
   const resources = { en, ru };
 
   i18next
-  .use(LanguageDetector)
-  .init({
-    fallbackLng: 'en',
-    debug: true,
-    resources,
-  });
+    .use(LanguageDetector)
+    .init({
+      fallbackLng: 'en',
+      debug: true,
+      resources,
+    });
 
   applyUi();
   const enemyField = document.getElementById('enemyField');

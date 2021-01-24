@@ -5,8 +5,8 @@ export default class OneDeckShip extends Ship {
     super(id);
     this.health = 1;
     this.orientationMapping = {
-      'east': ({ x, y }) => [{ x, y }],
-      'north': ({ x, y }) => [{ x, y }],
+      east: ({ x, y }) => [{ x, y }],
+      north: ({ x, y }) => [{ x, y }],
     };
   }
 }

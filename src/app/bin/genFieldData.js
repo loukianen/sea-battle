@@ -4,9 +4,17 @@ const generateFirtCellsRow = (ids) => {
   const letters = [null, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
   const res = ids.reduce(
     (acc, id, index) => {
-      const cell = { [id]: { id: id, style: 'cell', value: letters[index], coordinates: null } };
+      const cell = {
+        [id]: {
+          id,
+          style: 'cell',
+          value: letters[index],
+          coordinates: null,
+        },
+      };
       return { ...acc, ...cell };
-    }, {});
+    }, {},
+  );
   return res;
 };
 
@@ -15,10 +23,10 @@ const generateCellsRow = (ids, styles, number) => {
     const coordinates = index < 1 ? null : { x: index - 1, y: number - 1 };
     const cell = {
       [id]: {
-        id: id,
+        id,
         style: styles[index],
         value: index === 0 ? number : null,
-        coordinates: coordinates,
+        coordinates,
       },
     };
     return { ...acc, ...cell };
@@ -27,7 +35,7 @@ const generateCellsRow = (ids, styles, number) => {
 };
 
 const generateRestCellsRows = (idsList) => {
-  const amountOfMiddleElements = idsList[0].length - 3; // 3 = number column, first column end last column
+  const amountOfMiddleElements = idsList[0].length - 3; // 3 = number, first end last column
   const stylesMapping = {
     first: ['cell', 'cell-top-left', ...Array(amountOfMiddleElements).fill('cell-top'), 'cell-top-right'],
     middle: ['cell', 'cell-left', ...Array(amountOfMiddleElements).fill('cell-inside'), 'cell-right'],
@@ -53,7 +61,7 @@ const generateRestCellsRows = (idsList) => {
 };
 
 export default (battleFieldSize = 10) => {
-  if (battleFieldSize < 3 ) {
+  if (battleFieldSize < 3) {
     return {};
   }
   const fieldSize = battleFieldSize > 10 ? 11 : battleFieldSize + 1;

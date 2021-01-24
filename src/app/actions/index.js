@@ -1,4 +1,4 @@
-/*import { createAction } from 'redux-actions';
+/* import { createAction } from 'redux-actions';
 
 export const setLangageActionName = createAction('SET_LANGUAGE');
 
@@ -30,7 +30,7 @@ export const fetchTasks = () => async (dispatch) => {
     dispatch(fetchTasksFailure());
     throw e;
   }
-};*/
+}; */
 export const setLanguage = (lang) => ({
   type: 'SET_LANGUAGE',
   payload: lang,

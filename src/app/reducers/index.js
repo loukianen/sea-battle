@@ -1,15 +1,13 @@
 import { combineReducers } from 'redux';
 
-
 const languageReducer = (state = 'auto', action) => {
-    switch (action.type) {
-      case 'SET_LANGUAGE':
-        state = action.payload;
-        return state;
-      default:
-        return state;
-    }
-  };
+  switch (action.type) {
+    case 'SET_LANGUAGE':
+      return action.payload;
+    default:
+      return state;
+  }
+};
 
 const userCellsReducer = (state = {}) => state;
 

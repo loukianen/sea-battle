@@ -4,7 +4,7 @@ import ThreeDeckLineShip from '../src/app/ships/ThreeDeckLineShip';
 import FourDeckLineShip from '../src/app/ships/FourDeckLineShip';
 
 const mainPoint = { x: 2, y: 2 };
-const wrongMainPoints = [{ x: -1, y: 2 }, { x: 2, y: 2.2 }, Array()[0]];
+const wrongMainPoints = [{ x: -1, y: 2 }, { x: 2, y: 2.2 }, [][0]];
 
 const oneDeckShipData = [
   new OneDeckShip(1),
@@ -34,7 +34,7 @@ const fourDeckLineShippData = [
   new FourDeckLineShip(4),
   [{ x: 1, y: 2 }, { x: 2, y: 2 }, { x: 3, y: 2 }, { x: 4, y: 2 }],
   [{ x: 2, y: 1 }, { x: 2, y: 2 }, { x: 2, y: 3 }, { x: 2, y: 4 }],
-  ['wounded', 'wounded', 'wounded', 'killed', 'shot at the dead',],
+  ['wounded', 'wounded', 'wounded', 'killed', 'shot at the dead'],
   4,
 ];
 
