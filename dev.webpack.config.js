@@ -33,8 +33,6 @@ module.exports = {
   devServer: {
     contentBase: './dist',
     port: 7800,
-     /* historyApiFallback: false,
-    inline: true, */
     watchContentBase: true,
     progress: true
   },
