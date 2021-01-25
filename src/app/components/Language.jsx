@@ -26,7 +26,7 @@ class Language extends React.Component {
   render() {
     return(
       <li className="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
-        <a className="btn dropdown-toggle p-o" type="button" id="navLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{i18next.t('ui.navLanguage')}</a>
+        <a className="btn p-o" type="button" id="navLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{i18next.t('ui.navLanguage')}</a>
         <div className="dropdown-menu" aria-labelledby="languageMenuButton">
           <div className="dropdown-item d-flex flex-row">
             <img className="flag border border-info rounded" src="img/russia_fl.png" alt="russian flag" />

@@ -26,5 +26,13 @@ export default {
       header: 'Available ships',
       unit: 'pcs',
     },
+    optionsMenu: {
+      fieldSize: 'Battle field size',
+      ten: '10 x 10 cells',
+      enemy: 'Enemy',
+      ushakov: 'Ushakov',
+      shipType: 'Ship type',
+      line: 'Only line',
+    },
   },
 };

@@ -1,6 +1,4 @@
-import genField from '../src/app/bin/genFieldData';
-
-const cells3 = {
+export const cells3 = {
   1: {
     id: 1,
     style: 'cell',
@@ -98,12 +96,4 @@ const cells3 = {
     coordinates: { x: 2, y: 2 },
   },
 };
-const cellIds3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-const data = [
-  [genField(3), { cells: cells3, cellIds: cellIds3 }],
-  [genField(2), {}],
-];
-
-test.each(data)('genFieldData(%#)', (res, expectedRes) => {
-  expect(res).toEqual(expectedRes);
-});
+export const cellIds3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];

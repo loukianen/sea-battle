@@ -19,18 +19,11 @@ export const removeTask = ({ id }) => async (dispatch) => {
   }
 };
 // END
+*/
+export const setOptions = () => ({
+  type: 'SET_OPTIONS',
+});
 
-export const fetchTasks = () => async (dispatch) => {
-  dispatch(fetchTasksRequest());
-  try {
-    const url = routes.tasksUrl();
-    const response = await axios.get(url);
-    dispatch(fetchTasksSuccess({ tasks: response.data }));
-  } catch (e) {
-    dispatch(fetchTasksFailure());
-    throw e;
-  }
-}; */
 export const setLanguage = (lang) => ({
   type: 'SET_LANGUAGE',
   payload: lang,

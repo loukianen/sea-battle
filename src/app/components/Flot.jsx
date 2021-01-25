@@ -1,6 +1,8 @@
 import React from 'react';
 import i18next from 'i18next';
 
+const shipPart = <div className="ship cell30x30 rounded"></div>;
+
 export default class Flot extends React.Component {
   render() {
     return (
@@ -8,40 +10,13 @@ export default class Flot extends React.Component {
         <h5 className="mt-2 color-ship-border">{i18next.t('shipsTable.header')}</h5>
         <table className="table table-borderless color-ship-border">
           <tbody>
-            <tr>
+            {[4, 3, 2, 1].map((item) => (<tr key={item}>
               <td className="d-flex flex-row">
-                <div className="ship cell30x30 rounded"></div>
-                <div className="ship cell30x30 rounded"></div>
-                <div className="ship cell30x30 rounded"></div>
-                <div className="ship cell30x30 rounded"></div>
+                {Array(item).fill(shipPart)}
               </td>
-              <td>1</td>
+              <td>{5 - item}</td>
               <td>{i18next.t('shipsTable.unit')}</td>
-            </tr>
-            <tr>
-              <td className="d-flex flex-row">
-                <div className="ship cell30x30 rounded"></div>
-                <div className="ship cell30x30 rounded"></div>
-                <div className="ship cell30x30 rounded"></div>
-              </td>
-              <td>2</td>
-              <td>{i18next.t('shipsTable.unit')}</td>
-            </tr>
-            <tr>
-              <td className="d-flex flex-row">
-                <div className="ship cell30x30 rounded"></div>
-                <div className="ship cell30x30 rounded"></div>
-              </td>
-              <td>3</td>
-              <td>{i18next.t('shipsTable.unit')}</td>
-            </tr>
-            <tr>
-              <td className="d-flex flex-row">
-                <div className="ship cell30x30 rounded"></div>
-              </td>
-              <td>4</td>
-              <td>{i18next.t('shipsTable.unit')}</td>
-            </tr>
+            </tr>))}
           </tbody>
         </table>
       </div>

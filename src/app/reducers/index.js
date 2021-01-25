@@ -17,10 +17,16 @@ const enemyCellsReducer = (state = {}) => state;
 
 const enemyCellIdsReducer = (state = {}) => state;
 
+const gameOptionsReduser = (state = {}) => state;
+
+const gameStateReduser = (state = '') => state;
+
 export default combineReducers({
   language: languageReducer,
   userCells: userCellsReducer,
   userCellIds: userCellIdsReducer,
   enemyCells: enemyCellsReducer,
   enemyCellIds: enemyCellIdsReducer,
+  gameOptions: gameOptionsReduser,
+  gameState: gameStateReduser,
 });

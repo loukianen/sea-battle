@@ -160,6 +160,10 @@ img {
   color: var(--ship-border);
 }
 
+.color-ship-backgound {
+  background-color: var(--ship-border);
+}
+
 .flag {
   width: 25px;
   height: 20px;

@@ -26,5 +26,13 @@ export default {
       header: 'Доступные корабли',
       unit: 'шт.',
     },
+    optionsMenu: {
+      fieldSize: 'Размер поля',
+      ten: '10 x 10 клеток',
+      enemy: 'Противник',
+      ushakov: 'Ушаков',
+      shipType: 'Тип кораблей',
+      line: 'Только в линию',
+    },
   },
 };

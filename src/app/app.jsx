@@ -5,6 +5,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import App from './components/App.jsx';
 import reducer from './reducers/index';
 import generateFieldData from './bin/genFieldData';
+// import Ushakov from './bin/Ushakov';
 
 export default () => {
   // eslint-disable no-underscore-dangle 
@@ -14,6 +15,8 @@ export default () => {
 
   const { cells: userCells, cellIds: userCellIds } = generateFieldData();
   const { cells: enemyCells, cellIds: enemyCellIds } = generateFieldData();
+  const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' }
+  // const enemy = new Ushakov();
 
   const initialState = {
     language: 'auto',
@@ -21,6 +24,8 @@ export default () => {
     userCellIds: userCellIds,
     enemyCells: enemyCells,
     enemyCellIds: enemyCellIds,
+    gameOptions,
+    gameState: 'choosingSettings',
   };
 
   const store = createStore(reducer, initialState, devtoolMiddleware);
