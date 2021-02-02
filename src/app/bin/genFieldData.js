@@ -8,6 +8,7 @@ const generateFirtCellsRow = (ids) => {
         [id]: {
           id,
           style: 'cell',
+          defaultStyle: 'cell',
           value: letters[index],
           coordinates: null,
         },
@@ -25,6 +26,7 @@ const generateCellsRow = (ids, styles, number) => {
       [id]: {
         id,
         style: styles[index],
+        defaultStyle: styles[index],
         value: index === 0 ? number : null,
         coordinates,
       },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import i18next from 'i18next';
-// import * as actions from '../actions/index';
+import * as actions from '../actions/index';
 
 const mapStateToProps = (state) => {
   const {
@@ -21,11 +21,43 @@ const mapStateToProps = (state) => {
   return props;
 };
 
-/* const actionCreators = {
-  battleField: actions.battleField,
-};*/
+const actionCreators = {
+  changeCells: actions.changeCells,
+  setDefaultStyleForCells: actions.setDefaultStyleForCells,
+};
 
 class Battlefield extends React.Component {
+  handlerDragEnter = (id) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // for every cell { id: cellId, options: [['style', new style], ['value', new value]] }
+    const data = [{ id, options: [['style', 'ship']] }];
+    const { dispatch, changeCells } = this.props;
+    dispatch(changeCells(data));
+  }
+
+  handlerDrop = (id) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // for every cell { id: cellId, options: [['style', new style], ['value', new value]] }
+    const data = [{ id, options: [['style', 'ship']] }];
+    const { dispatch, changeCells } = this.props;
+    dispatch(changeCells(data));
+  }
+
+  handlerDragOver = () => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  handlerDragLeave = (id) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const data = [id]; // [ ...ids of cells]
+    const { dispatch, setDefaultStyleForCells } = this.props;
+    dispatch(setDefaultStyleForCells(data));
+  }
+
   render() {
     const { owner } = this.props;
     const cells = this.props[`${owner}Cells`];
@@ -41,7 +73,16 @@ class Battlefield extends React.Component {
             const cellValue = stateValue !== null && typeof stateValue !=='number'
               ? i18next.t(`field.${stateValue}`)
               : stateValue;
-            return (<div key={id} className={cells[id].style}>{cellValue}</div>);
+            return owner === 'user' && cells[id].coordinates !== null
+              ? (<div
+                  key={id}
+                  className={cells[id].style}
+                  onDragLeave={this.handlerDragLeave(id)}
+                  onDragEnter={this.handlerDragEnter(id)}
+                  onDrop={this.handlerDrop(id)}
+                  onDragOver={this.handlerDragOver(id)}
+                >{cellValue}</div>)
+              : (<div key={id} className={cells[id].style}>{cellValue}</div>);
           })}
         </div>
       </div>
@@ -49,4 +90,4 @@ class Battlefield extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(Battlefield);
+export default connect(mapStateToProps, actionCreators)(Battlefield);

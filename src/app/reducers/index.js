@@ -9,9 +9,37 @@ const languageReducer = (state = 'auto', action) => {
   }
 };
 
-const userCellsReducer = (state = {}) => state;
+const userCellsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'CHANGE_CELLS':
+      const newState = state;
+      action.payload.forEach(element => {
+        const { id, options } = element;
+        options.forEach(([optionName, value]) => {
+          newState[id][optionName] = value;
+        });
+      });
+      return newState;
+    case 'SET_DEFAULT_STYLE_FOR_CELLS':
+      const setDefaultState = state;
+      action.payload.forEach((cellId) => {
+        setDefaultState[cellId].style = setDefaultState[cellId].defaultStyle;
+      });
+    default:
+      return state;
+  }
+}
 
-const userCellIdsReducer = (state = {}) => state;
+const userCellIdsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'CHANGE_CELLS':
+      return [...state];
+    case 'SET_DEFAULT_STYLE_FOR_CELLS':
+      return [...state];
+    default:
+      return state;
+  }
+}
 
 const enemyCellsReducer = (state = {}) => state;
 
