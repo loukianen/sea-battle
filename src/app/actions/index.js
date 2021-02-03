@@ -29,6 +29,16 @@ export const setOptions = () => ({
   type: 'SET_OPTIONS',
 });
 
+export const changeCells = (data) => ({
+  type: 'CHANGE_CELLS',
+  payload: data,
+});
+
+export const setDefaultStyleForCells = (data) => ({
+  type: 'SET_DEFAULT_STYLE_FOR_CELLS',
+  payload: data,
+});
+
 export const setLanguage = (lang) => ({
   type: 'SET_LANGUAGE',
   payload: lang,

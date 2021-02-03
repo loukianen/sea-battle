@@ -68,7 +68,16 @@ export default combineReducers({
   language: languageReducer,
   userField: userFieldReducer,
   enemyField: enemyFieldReducer,
+<<<<<<< HEAD
   gameOptions: gameOptionsReducer,
   gameState: gameStateReducer,
   flot: flotReducer,
+=======
+  // userCells: userCellsReducer,
+  // userCellIds: userCellIdsReducer,
+  // enemyCells: enemyCellsReducer,
+  // enemyCellIds: enemyCellIdsReducer,
+  gameOptions: gameOptionsReduser,
+  gameState: gameStateReduser,
+>>>>>>> draggable
 });
