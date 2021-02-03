@@ -47,7 +47,7 @@ const generateRestRows = (size) => {
       const newNumber = number - counter;
       counter -= 1;
       return newNumber;
-  })
+    });
   const rows = lineNumbers.map((number, index) => {
     let styles;
     switch (index) {

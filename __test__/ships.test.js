@@ -47,38 +47,38 @@ const data = [
   fourDeckLineShippData,
 ];
 
+const mappingShipClasses = [
+  ['fourDeck', [new FourDeckLineShip()]],
+  ['threeDeck', [new ThreeDeckLineShip()]],
+  ['doubleDeck', [new DoubleDeckShip()]],
+  ['oneDeck', [new OneDeckShip()]],
+];
+
 const makeDataForFlotTesting = (options) => {
   const flot = makeFlot(options);
 
   if (!flot) {
     return {};
   }
-  
-  const totalUnits = _.reduce(flot, (acc, ships) => {
-    acc = acc + ships.length;
-    return acc;
-  }, 0);
+
+  const totalUnits = _.size(flot.ships);
 
   const countShipByType = (source, type) => {
-    if (!_.isArray(source)) {
+    if (_.isEmpty(source)) {
       return 0;
     }
-    return source.reduce(
-      (acc, ship) => (ship instanceof type ? acc + 1 : acc),
-      0,);
+    const { ships, shipIds } = source;
+    return shipIds.reduce(
+      (acc, id) => (ships[id] instanceof type ? acc + 1 : acc),
+      0,
+    );
   };
 
-  const fourDeckShipsAmount = countShipByType(flot.fourDeckShips, FourDeckLineShip);
-  const threeDeckShipsAmount = countShipByType(flot.threeDeckShips, ThreeDeckLineShip);
-  const doubleDeckShipsAmount = countShipByType(flot.doubleDeckShips, DoubleDeckShip);
-  const oneDeckShipsAmount = countShipByType(flot.oneDeckShips, OneDeckShip);
-  const uniqIdsAmount = new Set();
-
-  _.forEach(flot, (ships) => {
-    ships.forEach((ship) => {
-      uniqIdsAmount.add(ship.getId());
-    });
-  });
+  const fourDeckShipsAmount = countShipByType(flot, FourDeckLineShip);
+  const threeDeckShipsAmount = countShipByType(flot, ThreeDeckLineShip);
+  const doubleDeckShipsAmount = countShipByType(flot, DoubleDeckShip);
+  const oneDeckShipsAmount = countShipByType(flot, OneDeckShip);
+  const uniqIdsAmount = new Set(flot.shipIds);
 
   return {
     totalUnits,
@@ -87,7 +87,7 @@ const makeDataForFlotTesting = (options) => {
     doubleDeckShipsAmount,
     oneDeckShipsAmount,
     uniqIdsAmount,
-  }
+  };
 };
 
 test('whisout Id', () => {
@@ -108,6 +108,12 @@ test.each(data)('ship(%s)', (ship, coords, verticalCoords, answersForHit, expect
   expect(ship.health).toBe(expectHealth);
   answersForHit.forEach((answer) => {
     expect(ship.hit()).toBe(answer);
+  });
+});
+
+test.each(mappingShipClasses)('Test for ships classification(%s)', (shipClass, ships) => {
+  ships.forEach((ship) => {
+    expect(ship.getClass()).toBe(shipClass);
   });
 });
 

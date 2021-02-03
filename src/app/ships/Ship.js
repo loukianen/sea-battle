@@ -19,6 +19,7 @@ export default class {
     this.health = 0;
     this.coords = [];
     this.mainPoint = null;
+    this.shipClass = null;
   }
 
   getCoords() {
@@ -27,6 +28,10 @@ export default class {
 
   getId() {
     return this.id;
+  }
+
+  getClass() {
+    return this.shipClass;
   }
 
   hit() {

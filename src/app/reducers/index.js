@@ -11,24 +11,21 @@ const languageReducer = (state = 'auto', action) => {
 };
 
 const userFieldReducer = (state = [], action) => {
+  const newState = [...state];
   switch (action.type) {
     case 'CHANGE_CELLS':
-      const newState = [...state];
-      action.payload.forEach(element => {
+      action.payload.forEach((element) => {
         const { coords: { x, y }, options } = element;
         options.forEach(([optionName, value]) => {
           newState[y][x][optionName] = value;
-          
         });
       });
       return newState;
     case 'SET_DEFAULT_STYLE_FOR_CELLS':
-      const setDefaultState = [...state];
       action.payload.forEach(({ coords: { x, y } }) => {
-        setDefaultState[y][x].style = setDefaultState[y][x].defaultStyle;
-        console.log(JSON.stringify(setDefaultState[y][x].style));
+        newState[y][x].style = newState[y][x].defaultStyle;
       });
-      return setDefaultState;
+      return newState;
     default:
       return state;
   }
@@ -54,11 +51,10 @@ const flotReducer = (state = {}, action) => {
         case 'choosingSettings':
           return [];
         case 'settingFlot':
-          console.log(`From flotReduser: ${JSON.stringify(action.payload.gameOptions)}`);
           return makeFlot(action.payload.gameOptions);
         default:
           return state;
-      };
+      }
     default:
       return state;
   }
@@ -68,16 +64,7 @@ export default combineReducers({
   language: languageReducer,
   userField: userFieldReducer,
   enemyField: enemyFieldReducer,
-<<<<<<< HEAD
   gameOptions: gameOptionsReducer,
   gameState: gameStateReducer,
   flot: flotReducer,
-=======
-  // userCells: userCellsReducer,
-  // userCellIds: userCellIdsReducer,
-  // enemyCells: enemyCellsReducer,
-  // enemyCellIds: enemyCellIdsReducer,
-  gameOptions: gameOptionsReduser,
-  gameState: gameStateReduser,
->>>>>>> draggable
 });

@@ -9,19 +9,11 @@ const mapStateToProps = (state) => {
     language,
     userField,
     enemyField,
-    /* userCells,
-    userCellIds,
-    enemyCells,
-    enemyCellIds,*/
   } = state;
   const props = {
     language,
     userField,
     enemyField,
-    /* userCells,
-    userCellIds,
-    enemyCells,
-    enemyCellIds,*/
   };
   return props;
 };
@@ -33,7 +25,6 @@ const actionCreators = {
 
 class Battlefield extends React.Component {
   handlerDragEnter = (coords) => (e) => {
-    
     e.preventDefault();
     e.stopPropagation();
     // for every cell { id: cellId, options: [['style', new style], ['value', new value]] }
@@ -44,8 +35,8 @@ class Battlefield extends React.Component {
   }
 
   handlerDrop = (coords) => (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    // e.preventDefault();
+    // e.stopPropagation();
     // for every cell { id: cellId, options: [['style', new style], ['value', new value]] }
     const data = [{ coords, options: [['style', 'ship']] }];
     const { dispatch, changeCells } = this.props;
@@ -70,7 +61,6 @@ class Battlefield extends React.Component {
     const flotId = `${owner}Flot`;
     const fieldId = `${owner}Field`;
     const field = this.props[fieldId];
-    // console.log(JSON.stringify(field));
     return(
       <div className="field-container">
         <div className="text-center color-ship-border h3" id={flotId}>{i18next.t(`ui.${flotId}`)}</div>

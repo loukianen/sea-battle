@@ -22,7 +22,7 @@ export const removeTask = ({ id }) => async (dispatch) => {
 */
 export const changeGameState = (newGameState, gameOptions) => ({
   type: 'CHANGE_GAMESTATE',
-  payload: { newGameState, gameOptions }
+  payload: { newGameState, gameOptions },
 });
 
 export const setOptions = () => ({
