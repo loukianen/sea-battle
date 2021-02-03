@@ -5,10 +5,23 @@ export default {
       enemyFlot: 'Enemy flot',
       userFlot: 'Your flot',
       navStart: 'Start game',
+      startBattle: 'Start battle',
+      newGame: 'New game',
       navOptions: 'Options',
       navLanguage: 'Language',
       russianLanguage: 'Русский',
       englishLanguage: 'English',
+    },
+    alert: {
+      areYouSureRestart: 'The restart game will lose current data. Are you sure that you want to continue?',
+      areYouSureChangeSetting: 'Changing setting will restart game and current data will lost. Are you sure that you want to continue?',
+      continue: 'Continue',
+      cancel: 'Cancel',
+    },
+    info: {
+      makeSetting: 'Click "Start game" if you ready',
+      setFlot: 'Arrange the ships so that they do not touch each other',
+      killEnemy: 'Good luck!',
     },
     field: {
       a: 'a',

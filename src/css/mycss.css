@@ -42,8 +42,10 @@ img {
   width: 100%;
   height: 75%;
   min-height: 250px;
+  max-height: 300px;
   border: 3px solid var(--info);
   justify-content: center;
+  overflow-y: auto;
 }
 
 .grid-11 {
@@ -139,6 +141,11 @@ img {
 .ship {
   background-color: var(--info);
   border: var(--border-thin) solid var(--ship-border);
+}
+
+.emptyDock {
+  background-color: var(--bg-field);
+  border: var(--border-thin) solid var(--info);
 }
 
 .killed-ship {

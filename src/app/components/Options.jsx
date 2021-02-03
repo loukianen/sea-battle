@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import i18next from 'i18next';
 import { connect } from 'react-redux';
@@ -13,28 +14,26 @@ const actionCreators = {
   setOptions: actions.setOptions,
 };
 
-const divider = <div className="dropdown-item d-flex flex-row"></div>;
-
 const inputData = [
-  { type: 'item', header: 'fieldSize', values: ['ten'] },
-  { type: 'divider' },
-  { type: 'item', header: 'enemy', values: ['ushakov'] },
-  { type: 'divider' },
-  { type: 'item', header: 'shipType', values: ['line'] },
+  { blockId: 'block1', type: 'item', header: 'fieldSize', values: ['ten'] },
+  { blockId: 'block2', type: 'divider' },
+  { blockId: 'block3', type: 'item', header: 'enemy', values: ['ushakov'] },
+  { blockId: 'block4', type: 'divider' },
+  { blockId: 'block5', type: 'item', header: 'shipType', values: ['line'] },
 ];
 
 class Options extends React.Component {
   renderOptions() {
     return inputData.map((item) => {
       if (item.type === 'divider') {
-        return divider;
+        return <div key={item.blockId} className="dropdown-item d-flex flex-row"></div>;
       }
       return (
-        <div key={item.header} className="dropdown-item d-flex flex-row">
+        <div key={item.blockId} className="dropdown-item d-flex flex-row">
           <form>
             <h6>{i18next.t(`optionsMenu.${item.header}`)}</h6>
             {item.values.map((value) => (
-              <div key={value} className="form-check">
+              <div key={_.uniqueId('param')} className="form-check">
                 <input className="form-check-input" type="radio" name={value} id={value} value={value} checked disabled></input>
                 <label className="form-check-label" htmlFor={value}>{i18next.t(`optionsMenu.${value}`)}</label>
               </div>

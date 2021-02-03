@@ -5,10 +5,23 @@ export default {
       enemyFlot: 'Вражеский флот',
       userFlot: 'Ваш флот',
       navStart: 'Начать игру',
+      startBattle: 'Начать сражение',
+      newGame: 'Новая игра',
       navOptions: 'Настройки',
       navLanguage: 'Язык',
       russianLanguage: 'Русский',
       englishLanguage: 'English',
+    },
+    alert: {
+      areYouSureRestart: 'При перезапуске игры текущие данные будут потеряны. Вы уверены, что хотите продолжить?',
+      areYouSureChangeSetting: 'Changing setting will restart game and current data will lost. Are you sure that you want to continue?',
+      continue: 'Продолжить',
+      cancel: 'Отменить',
+    },
+    info: {
+      makeSetting: 'Кликните "Начать игру", если готовы',
+      setFlot: 'Расставьте корабли так, чтобы они не касались друг друга',
+      killEnemy: 'Удачи!',
     },
     field: {
       a: 'а',

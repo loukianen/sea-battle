@@ -20,6 +20,11 @@ export const removeTask = ({ id }) => async (dispatch) => {
 };
 // END
 */
+export const changeGameState = (newGameState, gameOptions) => ({
+  type: 'CHANGE_GAMESTATE',
+  payload: { newGameState, gameOptions }
+});
+
 export const setOptions = () => ({
   type: 'SET_OPTIONS',
 });

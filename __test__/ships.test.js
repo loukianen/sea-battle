@@ -1,7 +1,9 @@
+import _ from 'lodash';
 import OneDeckShip from '../src/app/ships/OneDeckShip';
 import DoubleDeckShip from '../src/app/ships/DoubleDeckShip';
 import ThreeDeckLineShip from '../src/app/ships/ThreeDeckLineShip';
 import FourDeckLineShip from '../src/app/ships/FourDeckLineShip';
+import makeFlot from '../src/app/bin/makeFlot';
 
 const mainPoint = { x: 2, y: 2 };
 const wrongMainPoints = [{ x: -1, y: 2 }, { x: 2, y: 2.2 }, [][0]];
@@ -45,6 +47,49 @@ const data = [
   fourDeckLineShippData,
 ];
 
+const makeDataForFlotTesting = (options) => {
+  const flot = makeFlot(options);
+
+  if (!flot) {
+    return {};
+  }
+  
+  const totalUnits = _.reduce(flot, (acc, ships) => {
+    acc = acc + ships.length;
+    return acc;
+  }, 0);
+
+  const countShipByType = (source, type) => {
+    if (!_.isArray(source)) {
+      return 0;
+    }
+    return source.reduce(
+      (acc, ship) => (ship instanceof type ? acc + 1 : acc),
+      0,);
+  };
+
+  const fourDeckShipsAmount = countShipByType(flot.fourDeckShips, FourDeckLineShip);
+  const threeDeckShipsAmount = countShipByType(flot.threeDeckShips, ThreeDeckLineShip);
+  const doubleDeckShipsAmount = countShipByType(flot.doubleDeckShips, DoubleDeckShip);
+  const oneDeckShipsAmount = countShipByType(flot.oneDeckShips, OneDeckShip);
+  const uniqIdsAmount = new Set();
+
+  _.forEach(flot, (ships) => {
+    ships.forEach((ship) => {
+      uniqIdsAmount.add(ship.getId());
+    });
+  });
+
+  return {
+    totalUnits,
+    fourDeckShipsAmount,
+    threeDeckShipsAmount,
+    doubleDeckShipsAmount,
+    oneDeckShipsAmount,
+    uniqIdsAmount,
+  }
+};
+
 test('whisout Id', () => {
   const ship = new OneDeckShip();
   expect(ship.getId()).toBeNull();
@@ -64,4 +109,38 @@ test.each(data)('ship(%s)', (ship, coords, verticalCoords, answersForHit, expect
   answersForHit.forEach((answer) => {
     expect(ship.hit()).toBe(answer);
   });
+});
+
+test('makeFlot with ten size fields and line type ships', () => {
+  const {
+    totalUnits,
+    fourDeckShipsAmount,
+    threeDeckShipsAmount,
+    doubleDeckShipsAmount,
+    oneDeckShipsAmount,
+    uniqIdsAmount,
+  } = makeDataForFlotTesting({ fieldSize: 'ten', shipType: 'line' });
+  expect(totalUnits).toBe(10);
+  expect(fourDeckShipsAmount).toBe(1);
+  expect(threeDeckShipsAmount).toBe(2);
+  expect(doubleDeckShipsAmount).toBe(3);
+  expect(oneDeckShipsAmount).toBe(4);
+  expect(uniqIdsAmount.size).toBe(10);
+});
+
+test('makeFlot with three size fields and line type ships', () => {
+  const {
+    totalUnits,
+    fourDeckShipsAmount,
+    threeDeckShipsAmount,
+    doubleDeckShipsAmount,
+    oneDeckShipsAmount,
+    uniqIdsAmount,
+  } = makeDataForFlotTesting({ fieldSize: 'three', shipType: 'line' });
+  expect(totalUnits).toBe(1);
+  expect(fourDeckShipsAmount).toBe(0);
+  expect(threeDeckShipsAmount).toBe(0);
+  expect(doubleDeckShipsAmount).toBe(0);
+  expect(oneDeckShipsAmount).toBe(1);
+  expect(uniqIdsAmount.size).toBe(1);
 });

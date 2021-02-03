@@ -1,25 +1,78 @@
+import _ from 'lodash';
 import React from 'react';
+import { connect } from 'react-redux';
 import i18next from 'i18next';
 
-const shipPart = <div className="ship cell30x30 rounded"></div>;
+const shipTypes = [
+  { typeName: 'fourDeckShips', cellAmount: 4},
+  { typeName: 'threeDeckShips', cellAmount: 3},
+  { typeName: 'doubleDeckShips', cellAmount: 2},
+  { typeName: 'oneDeckShips', cellAmount: 1},
+];
 
-export default class Flot extends React.Component {
+const shipPart = {
+  notEmpty: <div className="ship cell30x30 rounded"></div>,
+  empty: <div className="emptyDock cell30x30 rounded"></div>,
+};
+
+const mapStateToProps = (state) => {
+  const { language, flot } = state;
+  
+  const props = { language, flot };
+  return props;
+};
+
+class Flot extends React.Component {
+  constructor() {
+    super();
+    /*this.shipsOrientation = {
+      fourDeckShips: 'east',
+      threeDeckShips: 'east',
+      doubleDeckShips: 'east',
+      oneDeckShips: 'east',
+    };*/
+    this.state = {
+      fourDeckShips: 'east',
+      threeDeckShips: 'east',
+      doubleDeckShips: 'east',
+      oneDeckShips: 'east',
+    };
+  }
+
+  handleDoubleClick = (typeName) => (e) => {
+    e.peventDefault;
+    console.log(`doubleClick work! TypeName: ${typeName}`);
+    const newShipOrientation = this.state[typeName] === 'east' ? 'north' : 'east';
+    this.setState({ [typeName]: newShipOrientation });
+    console.log(`Changed state: ${this.state[typeName]}`);
+  }
+
   render() {
+    const { flot } = this.props;
     return (
       <div className="d-flex flex-column shipsfield text-center rounded">
         <h5 className="mt-2 color-ship-border">{i18next.t('shipsTable.header')}</h5>
         <table className="table table-borderless color-ship-border">
           <tbody>
-            {[4, 3, 2, 1].map((item) => (<tr key={item}>
-              <td className="d-flex flex-row">
-                {Array(item).fill(shipPart)}
-              </td>
-              <td>{5 - item}</td>
-              <td>{i18next.t('shipsTable.unit')}</td>
-            </tr>))}
+            {!_.isEmpty(flot) > 0 && shipTypes.map(({ typeName, cellAmount }) => {
+              const amountOfShips = flot[typeName].length;
+              const dockState = amountOfShips === 0 ? 'empty' : 'notEmpty';
+              const dockClasses = this.state[typeName] === 'north'
+                ? 'd-flex flex-column'
+                : 'd-flex flex-row';
+              return (<tr key={typeName}>
+                <td className={dockClasses} onDoubleClick={this.handleDoubleClick(typeName)}>
+                  {Array(cellAmount).fill(shipPart[dockState])}
+                </td>
+                <td>{amountOfShips}</td>
+                <td>{i18next.t('shipsTable.unit')}</td>
+              </tr>);
+            })}
           </tbody>
         </table>
       </div>
     );
   }
 }
+
+export default connect(mapStateToProps)(Flot);
