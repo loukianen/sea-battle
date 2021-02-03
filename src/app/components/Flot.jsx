@@ -7,7 +7,7 @@ export default class Flot extends React.Component {
   handleDragstart = (e) => {
     const text = 'Hi!'; // e.target.getAttribute('key');
     
-    //e.dataTransfer.effectAllowed = "copy";
+    e.dataTransfer.effectAllowed = "move";
     //e.dataTransfer.setData('text', 'Hello, guys!');
     // console.log(`From handleDragstart: ${e.dataTransfer.getData('text')}`);
   }

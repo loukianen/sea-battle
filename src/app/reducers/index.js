@@ -9,27 +9,30 @@ const languageReducer = (state = 'auto', action) => {
   }
 };
 
-const userCellsReducer = (state = {}, action) => {
+const userFieldReducer = (state = [], action) => {
   switch (action.type) {
     case 'CHANGE_CELLS':
-      const newState = state;
+      const newState = [...state];
       action.payload.forEach(element => {
-        const { id, options } = element;
+        const { coords: { x, y }, options } = element;
         options.forEach(([optionName, value]) => {
-          newState[id][optionName] = value;
+          newState[y][x][optionName] = value;
+          
         });
       });
       return newState;
     case 'SET_DEFAULT_STYLE_FOR_CELLS':
-      const setDefaultState = state;
-      action.payload.forEach((cellId) => {
-        setDefaultState[cellId].style = setDefaultState[cellId].defaultStyle;
+      const setDefaultState = [...state];
+      action.payload.forEach(({ coords: { x, y } }) => {
+        setDefaultState[y][x].style = setDefaultState[y][x].defaultStyle;
+        console.log(JSON.stringify(setDefaultState[y][x].style));
       });
+      return setDefaultState;
     default:
       return state;
   }
 }
-
+/*
 const userCellIdsReducer = (state = {}, action) => {
   switch (action.type) {
     case 'CHANGE_CELLS':
@@ -40,10 +43,12 @@ const userCellIdsReducer = (state = {}, action) => {
       return state;
   }
 }
+*/
+// const enemyCellsReducer = (state = {}) => state;
 
-const enemyCellsReducer = (state = {}) => state;
+// const enemyCellIdsReducer = (state = {}) => state;
 
-const enemyCellIdsReducer = (state = {}) => state;
+const enemyFieldReducer = (state = {}) => state;
 
 const gameOptionsReduser = (state = {}) => state;
 
@@ -51,10 +56,12 @@ const gameStateReduser = (state = '') => state;
 
 export default combineReducers({
   language: languageReducer,
-  userCells: userCellsReducer,
-  userCellIds: userCellIdsReducer,
-  enemyCells: enemyCellsReducer,
-  enemyCellIds: enemyCellIdsReducer,
+  userField: userFieldReducer,
+  enemyField: enemyFieldReducer,
+  // userCells: userCellsReducer,
+  // userCellIds: userCellIdsReducer,
+  // enemyCells: enemyCellsReducer,
+  // enemyCellIds: enemyCellIdsReducer,
   gameOptions: gameOptionsReduser,
   gameState: gameStateReduser,
 });

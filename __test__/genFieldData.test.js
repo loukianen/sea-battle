@@ -1,11 +1,30 @@
 import genField from '../src/app/bin/genFieldData';
-import { cells3, cellIds3 } from '../__fixtures__/fieldData';
+import gaugeField from '../__fixtures__/fieldData';
 
-const data = [
-  [genField(3), { cells: cells3, cellIds: cellIds3 }],
-  [genField(2), {}],
-];
+const props = ['style', 'defaultStyle', 'value', 'coords'];
+const fielsSize = 3;
+const field = genField(fielsSize);
 
-test.each(data)('genFieldData(%#)', (res, expectedRes) => {
-  expect(res).toEqual(expectedRes);
+test('field size < 3', () => {
+  expect(genField(2)).toEqual([]);
+});
+
+test('field', () => {
+  gaugeField.forEach((line, y) => {
+    line.forEach((cell, x) => {
+      props.forEach((prop) => {
+        expect(field[y][x][prop]).toEqual(cell[prop]);
+      });
+    });
+  });
+});
+
+test('uniquest id', () => {
+  const ids = new Set();
+  field.forEach((line) => {
+    line.forEach((cell) => {
+      ids.add(cell.id);
+    });
+  });
+  expect(ids.size).toBe((fielsSize + 1) ** 2);
 });
