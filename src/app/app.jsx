@@ -14,17 +14,15 @@ export default () => {
   const devtoolMiddleware = ext && ext();
   // eslint-enable
 
-  const { cells: userCells, cellIds: userCellIds } = generateFieldData();
-  const { cells: enemyCells, cellIds: enemyCellIds } = generateFieldData();
+  // const { cells: userCells, cellIds: userCellIds } = generateFieldData();
+  // const { cells: enemyCells, cellIds: enemyCellIds } = generateFieldData();
   const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
   // const enemy = new Ushakov();
 
   const initialState = {
     language: 'auto',
-    userCells: userCells,
-    userCellIds: userCellIds,
-    enemyCells: enemyCells,
-    enemyCellIds: enemyCellIds,
+    userField: generateFieldData(),
+    enemyField: generateFieldData(),
     gameOptions,
     gameState: 'choosingSettings',
     flot: makeFlot(gameOptions),

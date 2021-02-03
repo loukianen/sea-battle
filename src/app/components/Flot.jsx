@@ -39,6 +39,14 @@ class Flot extends React.Component {
     };
   }
 
+  handleDragstart = (e) => {
+    const text = 'Hi!'; // e.target.getAttribute('key');
+    
+    e.dataTransfer.effectAllowed = "move";
+    //e.dataTransfer.setData('text', 'Hello, guys!');
+    // console.log(`From handleDragstart: ${e.dataTransfer.getData('text')}`);
+  }
+
   handleDoubleClick = (typeName) => (e) => {
     e.peventDefault;
     console.log(`doubleClick work! TypeName: ${typeName}`);
@@ -61,8 +69,10 @@ class Flot extends React.Component {
                 ? 'd-flex flex-column'
                 : 'd-flex flex-row';
               return (<tr key={typeName}>
-                <td className={dockClasses} onDoubleClick={this.handleDoubleClick(typeName)}>
-                  {Array(cellAmount).fill(shipPart[dockState])}
+                <td onDoubleClick={this.handleDoubleClick(typeName)}>
+                  <div className={dockClasses} draggable="true" onDragStart={this.handleDragstart}>
+                    {Array(cellAmount).fill(shipPart[dockState])}
+                  </div>
                 </td>
                 <td>{amountOfShips}</td>
                 <td>{i18next.t('shipsTable.unit')}</td>
