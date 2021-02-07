@@ -5,7 +5,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import App from './components/App.jsx';
 import reducer from './reducers/index';
 import generateFieldData from './bin/genFieldData';
-import makeFlot from './bin/makeFlot';
+// import makeFlot from './bin/makeFlot';
 // import Ushakov from './bin/Ushakov';
 
 export default () => {
@@ -14,8 +14,6 @@ export default () => {
   const devtoolMiddleware = ext && ext();
   // eslint-enable
 
-  // const { cells: userCells, cellIds: userCellIds } = generateFieldData();
-  // const { cells: enemyCells, cellIds: enemyCellIds } = generateFieldData();
   const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
   // const enemy = new Ushakov();
 
@@ -25,7 +23,9 @@ export default () => {
     enemyField: generateFieldData(),
     gameOptions,
     gameState: 'choosingSettings',
-    flot: makeFlot(gameOptions),
+    flot: { ships: {}, shipIds: [] },
+    userFlot: {},
+    shipInMove: null, // shipId, that took out the dock, but didn't put on the battlefield
   };
 
   const store = createStore(reducer, initialState, devtoolMiddleware);

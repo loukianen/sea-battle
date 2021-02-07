@@ -5,6 +5,7 @@ const generateFirstRow = (size) => {
   const row = values.map((value, index) => {
     const cell = {
       id: currentId,
+      shipId: null,
       style: 'cell',
       defaultStyle: 'cell',
       value,
@@ -22,6 +23,7 @@ const generateRow = (styles, number) => {
     const coords = { x: index, y: number };
     const cell = {
       id: currentId,
+      shipId: null,
       style,
       defaultStyle: style,
       value: index === 0 ? number : null,

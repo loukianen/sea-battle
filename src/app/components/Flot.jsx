@@ -3,8 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import i18next from 'i18next';
 import shipClasses from '../ships/shipClasses';
+import * as actions from '../actions/index';
 
-const generateDefaultSipsOrientation = () => shipClasses.reduce(
+const generateDefaultDocksOrientation = () => shipClasses.reduce(
   (acc, shipClass) => ({ ...acc, [shipClass]: 'east' }), {},
 );
 
@@ -27,10 +28,23 @@ const getDockStyle = (isDockEmpty) => {
   return <div className="ship cell30x30 rounded"></div>;
 };
 
+const chooseShipId = (className, flot) => {
+  const { ships, shipIds } = flot;
+  for (const id of shipIds) {
+    if (ships[id].getClass() === className) {
+      return id;
+    }
+  }
+};
+
+const actionCreators = {
+  takeShipOutDock: actions.takeShipOutDock,
+  returnShipIntoDock: actions.returnShipIntoDock,
+};
+
 const mapStateToProps = (state) => {
-  const { language, flot } = state;
-  
-  const props = { language, flot };
+  const { language, flot, gameState, shipInMove } = state;
+  const props = { language, flot, gameState, shipInMove };
   return props;
 };
 
@@ -38,49 +52,59 @@ class Flot extends React.Component {
   constructor() {
     super();
     this.state = { 
-      shipsOrientation: generateDefaultSipsOrientation(),
+      docksOrientation: generateDefaultDocksOrientation(),
     };
   }
 
   handleDoubleClick = (className) => (e) => {
     e.peventDefault;
-    const newState = generateDefaultSipsOrientation();
-    const orientation = this.state.shipsOrientation[className] === 'east' ? 'north' : 'east';
+    const newState = generateDefaultDocksOrientation();
+    const orientation = this.state.docksOrientation[className] === 'east' ? 'north' : 'east';
     newState[className] = orientation;
-    this.setState({ shipsOrientation: newState });
+    this.setState({ docksOrientation: newState });
   }
 
-  handleDragstart = (e) => {
-    const text = 'Hi!'; // e.target.getAttribute('key');
+  handleDragstart = (className) => (e) => {
     e.dataTransfer.dropEffect = 'none';
     e.dataTransfer.effectAllowed = 'copy';
-    //e.dataTransfer.setData('text', 'Hello, guys!');
-    // console.log(`From handleDragstart: ${e.dataTransfer.getData('text')}`);
+    const { dispatch, takeShipOutDock, flot } = this.props;
+    const shipId = chooseShipId(className, flot);
+    const ship = flot.ships[shipId];
+    ship.setOrientation(this.state.docksOrientation[className]);
+    dispatch(takeShipOutDock(ship));
   }
-  
+
+  handleDragEnd = (e) => {
+    e.preventDefault();
+    const { returnShipIntoDock, shipInMove, dispatch } = this.props;
+    const data = { coords: [], ship: shipInMove };
+    dispatch(returnShipIntoDock(data));
+  }
+
   render() {
-    const { flot } = this.props;
+    const { flot, gameState } = this.props;
     const dock = putShipsInDock(flot);
     return (
       <div className="d-flex flex-column shipsfield text-center rounded">
         <h5 className="mt-2 color-ship-border">{i18next.t('shipsTable.header')}</h5>
         <table className="table table-borderless color-ship-border">
           <tbody>
-            {!_.isEmpty(flot) > 0 && shipClasses.map((className, index) => {
+            {shipClasses.map((className, index) => {
               const amountOfShips = dock[className].length;
               const isDockEmpty = amountOfShips === 0;
-              const dockClasses = this.state.shipsOrientation[className] === 'north'
+              const dockClasses = this.state.docksOrientation[className] === 'north'
                 ? 'd-flex flex-column'
                 : 'd-flex flex-row';
               const dockDesign = Array(shipClasses.length - index).fill(getDockStyle(isDockEmpty));
               return (<tr key={className}>
                 <td>
-                  {isDockEmpty
-                    ? <div className={dockClasses}>{dockDesign}</div>
+                  {gameState !== 'settingFlot' || isDockEmpty
+                    ? <div className={dockClasses} onDragEnd={this.handleDragEnd}>{dockDesign}</div>
                     : <div
                         className={dockClasses}
-                        draggable="true" onDragStart={this.handleDragstart}
+                        draggable="true" onDragStart={this.handleDragstart(className)}
                         onDoubleClick={this.handleDoubleClick(className)}
+                        onDragEnd={this.handleDragEnd}
                       >
                         {dockDesign}
                     </div>}
@@ -96,4 +120,4 @@ class Flot extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(Flot);
+export default connect(mapStateToProps, actionCreators)(Flot);

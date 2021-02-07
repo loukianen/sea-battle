@@ -143,6 +143,23 @@ img {
   border: var(--border-thin) solid var(--ship-border);
 }
 
+.ship-wrong {
+  background-color: var(--danger);
+  border: var(--border-thin) solid var(--ship-border);
+}
+
+.ship-area {
+  background-color: var(--info);
+  opacity: 0.3;
+  border: var(--border-thin) solid var(--ship-border);
+}
+
+.ship-area-wrong {
+  background-color: var(--danger);
+  opacity: 0.3;
+  border: var(--border-thin) solid var(--ship-border);
+}
+
 .emptyDock {
   background-color: var(--bg-field);
   border: var(--border-thin) solid var(--info);

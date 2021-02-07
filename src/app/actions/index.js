@@ -1,25 +1,3 @@
-/* import { createAction } from 'redux-actions';
-
-export const setLangageActionName = createAction('SET_LANGUAGE');
-
-export const setLanguage = ({ lang }) => async (dispatch) => {
-  const response = await axios.post(routes.tasksUrl(), { task });
-  dispatch(setLangageActionName({ task: response.data }));
-};
-
-export const removeTask = ({ id }) => async (dispatch) => {
-  dispatch(removeTaskRequest());
-  try {
-    const url = routes.taskUrl(id);
-    await axios.delete(url);
-    dispatch(removeTaskSuccess({ id }));
-  } catch (e) {
-    dispatch(removeTaskFailure());
-    throw e;
-  }
-};
-// END
-*/
 export const changeGameState = (newGameState, gameOptions) => ({
   type: 'CHANGE_GAMESTATE',
   payload: { newGameState, gameOptions },
@@ -42,4 +20,19 @@ export const setDefaultStyleForCells = (data) => ({
 export const setLanguage = (lang) => ({
   type: 'SET_LANGUAGE',
   payload: lang,
+});
+
+export const takeShipOutDock = (ship) => ({
+  type: 'TAKE_SHIP_OUT_DOCK',
+  payload: ship,
+});
+
+export const putShipIntoUserDock = (data) => ({
+  type: 'PUT_SHIP_INTO_USER_DOCK',
+  payload: data,
+});
+
+export const returnShipIntoDock = (data) => ({
+  type: 'RETURN_SHIP_INTO_DOCK',
+  payload: data,
 });

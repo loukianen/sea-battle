@@ -40,6 +40,19 @@ const fourDeckLineShippData = [
   4,
 ];
 
+const doubleDeckShipArea = [
+  { x: 2, y: 1 },
+  { x: 3, y: 1 },
+  { x: 4, y: 1 },
+  { x: 4, y: 2 },
+  { x: 4, y: 3 },
+  { x: 3, y: 3 },
+  { x: 2, y: 3 },
+  { x: 1, y: 3 },
+  { x: 1, y: 2 },
+  { x: 1, y: 1 },
+]; // mainPoint { x: 2, y: 2 }
+
 const data = [
   oneDeckShipData,
   doubleDeckShipData,
@@ -93,6 +106,14 @@ const makeDataForFlotTesting = (options) => {
 test('whisout Id', () => {
   const ship = new OneDeckShip();
   expect(ship.getId()).toBeNull();
+});
+
+test('ship area', () => {
+  const ship = new DoubleDeckShip();
+  ship.setCoords({ x: 2, y: 2 });
+  const area = ship.getArea();
+  expect(_.differenceWith(area, doubleDeckShipArea, _.isEqual)).toEqual([]);
+  expect(_.differenceWith(doubleDeckShipArea, area, _.isEqual)).toEqual([]);
 });
 
 test.each(data)('ship(%s)', (ship, coords, verticalCoords, answersForHit, expectHealth) => {
