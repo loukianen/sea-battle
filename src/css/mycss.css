@@ -150,7 +150,7 @@ img {
 
 .ship-area {
   background-color: var(--info);
-  opacity: 0.3;
+  opacity: 0.4;
   border: var(--border-thin) solid var(--ship-border);
 }
 

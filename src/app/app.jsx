@@ -5,8 +5,23 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import App from './components/App.jsx';
 import reducer from './reducers/index';
 import generateFieldData from './bin/genFieldData';
-// import makeFlot from './bin/makeFlot';
-// import Ushakov from './bin/Ushakov';
+import makeFlot from './bin/makeFlot';
+import Ushakov from './bin/Ushakov';
+
+const makeBattlefild = (field, ai, options) => {
+  const flot = ai.setFlot(field, makeFlot(options));
+  const battlefield = field;
+  const { ships, shipIds } = flot;
+  shipIds.forEach((id) => {
+    const coords = ships[id].getCoords();
+    coords.forEach(({ x, y }) => {
+      battlefield[y][x].style = 'ship';
+      battlefield[y][x].shipId = id;
+      // console.log(`Cell ${x} ${y}: ${JSON.stringify(battlefield[y][x])}`);
+    });
+  });
+  return battlefield;
+};
 
 export default () => {
   // eslint-disable no-underscore-dangle 
@@ -15,12 +30,12 @@ export default () => {
   // eslint-enable
 
   const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
-  // const enemy = new Ushakov();
+  const enemy = new Ushakov();
 
   const initialState = {
     language: 'auto',
     userField: generateFieldData(),
-    enemyField: generateFieldData(),
+    enemyField: makeBattlefild(generateFieldData(), enemy, gameOptions),
     gameOptions,
     gameState: 'choosingSettings',
     flot: { ships: {}, shipIds: [] },

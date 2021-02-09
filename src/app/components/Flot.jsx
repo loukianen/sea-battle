@@ -98,7 +98,7 @@ class Flot extends React.Component {
               const dockDesign = Array(shipClasses.length - index).fill(getDockStyle(isDockEmpty));
               return (<tr key={className}>
                 <td>
-                  {gameState !== 'settingFlot' || isDockEmpty
+                  {gameState !== 'settingFlot'
                     ? <div className={dockClasses} onDragEnd={this.handleDragEnd}>{dockDesign}</div>
                     : <div
                         className={dockClasses}

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { calcArea } from '../bin/utils';
 
 const validOrientationValues = ['east', 'north'];
 
@@ -15,26 +16,6 @@ const isValidMainPoint = (point) => {
     && x >= 0
     && y >= 0
   );
-};
-
-const calcArea = (coords) => {
-  const pointsAreas = coords.map(({ x, y }) => {
-    const res = [];
-    let curX = x - 1;
-    let curY = y - 1;
-    for (let i = 0; i < 3; i += 1) {
-      for (let j = 0; j < 3; j += 1) {
-        res.push({ x: curX, y: curY });
-        curX += 1;
-      }
-      curX = x - 1;
-      curY += 1;
-    }
-    return res;
-  });
-  const areaWithShipCoords = _.uniqWith(_.flatten(pointsAreas), _.isEqual);
-  const area = _.differenceWith(areaWithShipCoords, coords, _.isEqual);
-  return area;
 };
 
 export default class {
@@ -57,6 +38,10 @@ export default class {
 
   getId() {
     return this.id;
+  }
+
+  getHealth() {
+    return this.health;
   }
 
   getClass() {
