@@ -11,6 +11,7 @@ export default {
       navLanguage: 'Language',
       russianLanguage: 'Русский',
       englishLanguage: 'English',
+      score: 'Score',
     },
     alert: {
       areYouSureRestart: 'The restart game will lose current data. Are you sure that you want to continue?',
@@ -22,6 +23,7 @@ export default {
       makeSetting: 'Click "Start game" if you ready',
       setFlot: 'Arrange the ships so that they do not touch each other',
       killEnemy: 'Good luck!',
+      putYourShips: 'You must finish arrangement your ships before starting the battle',
     },
     field: {
       a: 'a',
@@ -46,6 +48,17 @@ export default {
       ushakov: 'Ushakov',
       shipType: 'Ship type',
       line: 'Only line',
+    },
+    log: {
+      started: 'started',
+      offTarget: 'off target',
+      wounded: 'wounded',
+      killed: 'killed',
+      user: 'You',
+      enemy: 'Enemy',
+      player: 'Player',
+      shoot: 'Shoot',
+      result: 'Result',
     },
   },
 };

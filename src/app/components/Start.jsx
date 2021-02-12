@@ -2,6 +2,11 @@ import React from 'react';
 import i18next from 'i18next';
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
+import generateFieldData from '../bin/genFieldData';
+import makeFlot from '../bin/makeFlot';
+import { getFieldSize } from '../bin/utils';
+import Ushakov from './Ushakov';
+import game from '../bin/game';
 
 const getButtonLabel = (gameState) => {
   switch (gameState) {
@@ -11,6 +16,15 @@ const getButtonLabel = (gameState) => {
       return i18next.t('ui.startBattle');
     default:
       return i18next.t('ui.newGame');
+  }
+};
+
+const getEnemy = (enemyName) => {
+  switch (enemyName) {
+    case 'ushakov':
+      return new Ushakov();
+    default:
+      throw new Error('Unknown enemy name');
   }
 };
 
@@ -26,13 +40,13 @@ const getNewGameState = (gameState) => {
 };
 
 const mapStateToProps = (state) => {
-  const { language, gameState, gameOptions } = state;
-  const props = { language, gameState, gameOptions };
+  const props = {...state};
   return props;
 };
 
 const actionCreators = {
   changeGameState: actions.changeGameState,
+  showPutYourShips: actions.showPutYourShips,
 };
 
 class Start extends React.Component {
@@ -41,11 +55,44 @@ class Start extends React.Component {
     const {
       dispatch,
       changeGameState,
-      gameState,
+      showPutYourShips,
+      enemy,
+      enemyField,
+      enemyFlot,
+      enemyMap,
+      flot,
       gameOptions,
+      gameState,
+      language,
+      log,
+      score,
+      shipInMove,
+      userField,
+      userFlot,
     } = this.props;
     const newGameState = getNewGameState(gameState);
-    dispatch(changeGameState(newGameState, gameOptions));
+    if (newGameState === 'settingFlot') {
+      const newEnemy = getEnemy(gameOptions.enemy);
+      const newField = generateFieldData(getFieldSize(gameOptions.fieldSize));
+      const newFlot = makeFlot(gameOptions);
+      const { ships, shipIds, field } = newEnemy.setFlot(newField, newFlot);
+      const newEnemyFlot = { ships, shipIds };
+      dispatch(changeGameState({ newGameState, gameOptions, newEnemy, newEnemyFlot, field }));
+    } else if (newGameState === 'battleIsOn') {
+      if (flot.shipIds.length !== 0) {
+        dispatch(showPutYourShips());
+      }
+      const startRecord = game('start');
+      const [whoStarted] = startRecord;
+      if (whoStarted === 'enemy') {
+        const shootRecord = game('getShoot', { enemy, userField, userFlot });
+        dispatch(changeGameState({ newGameState, gameOptions, records: [startRecord, shootRecord] }));
+      } else {
+        dispatch(changeGameState({ newGameState, gameOptions, records: [startRecord] }));
+      }
+    } else {
+      dispatch(changeGameState({ newGameState, gameOptions }));
+    }
   }
   
   render() {

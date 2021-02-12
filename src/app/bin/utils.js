@@ -26,6 +26,8 @@ const getPointAreaMapping = {
   },
 };
 
+export const letters = [null, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+
 export const calcArea = (data, corners = 'with') => { // corners 'with' or 'without'
   const coords = _.isArray(data) ? data : [data];
   const pointsAreas = coords.map((point) => getPointAreaMapping[corners](point));
@@ -43,7 +45,51 @@ export const isValidCoords = (coords, minValue, maxValue) => { // coords [{}, {}
     .every(({ x, y }) => (x >= minValue && x <= maxValue && y >= minValue && y <= maxValue));
 };
 
+export const getActivePlayer = (records) => {
+  let activePlayer;
+  records.forEach((record) => {
+    const [player] = record;
+    activePlayer = player;
+  });
+  return activePlayer;
+};
+
 export const getRandomElFromColl = (arr) => {
   const index = Math.round(Math.random() * (arr.length - 1));
   return arr[index];
+};
+
+export const getFieldSize = (fieldSizeName) => {
+  switch (fieldSizeName) {
+    case 'ten':
+      return 10;
+    case 'three':
+      return 3;
+    default:
+      throw new Error('Unknown field size');
+  }
+};
+
+export const upGradeCell = (cell, actionResult) => {
+  const changeMapping = {
+    started: (c) => c,
+    offTarget: (c) => {
+      const newCell = _.cloneDeep(c);
+      newCell.value = '.';
+      return newCell;
+    },
+    wounded: (c) => {
+      const newCell = _.cloneDeep(c);
+      newCell.style = 'killed-ship';
+      newCell.value = 'X';
+      return newCell;
+    },
+    killed: (c) => {
+      const newCell = _.cloneDeep(c);
+      newCell.style = 'killed-ship';
+      newCell.value = 'X';
+      return newCell;
+    },
+  };
+  return changeMapping[actionResult](cell);
 };

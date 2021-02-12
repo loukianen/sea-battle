@@ -85,7 +85,7 @@ class Flot extends React.Component {
     const { flot, gameState } = this.props;
     const dock = putShipsInDock(flot);
     return (
-      <div className="d-flex flex-column shipsfield text-center rounded">
+      <div className="d-flex flex-column shipsfield justify-content-center text-center rounded">
         <h5 className="mt-2 color-ship-border">{i18next.t('shipsTable.header')}</h5>
         <table className="table table-borderless color-ship-border">
           <tbody>

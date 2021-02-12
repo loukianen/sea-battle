@@ -11,6 +11,7 @@ export default {
       navLanguage: 'Язык',
       russianLanguage: 'Русский',
       englishLanguage: 'English',
+      score: 'Счет',
     },
     alert: {
       areYouSureRestart: 'При перезапуске игры текущие данные будут потеряны. Вы уверены, что хотите продолжить?',
@@ -22,6 +23,7 @@ export default {
       makeSetting: 'Кликните "Начать игру", если готовы',
       setFlot: 'Расставьте корабли так, чтобы они не касались друг друга',
       killEnemy: 'Удачи!',
+      putYourShips: 'Вы должны расставить все свои корабли до начала битвы',
     },
     field: {
       a: 'а',
@@ -46,6 +48,17 @@ export default {
       ushakov: 'Ушаков',
       shipType: 'Тип кораблей',
       line: 'Только в линию',
+    },
+    log: {
+      started: 'начал',
+      offTarget: 'мимо',
+      wounded: 'ранен',
+      killed: 'убит',
+      user: 'Вы',
+      enemy: 'Враг',
+      player: 'Игрок',
+      shoot: 'Ход',
+      result: 'Результат',
     },
   },
 };

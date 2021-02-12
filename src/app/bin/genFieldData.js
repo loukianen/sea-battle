@@ -1,5 +1,6 @@
+import { letters } from './utils';
+
 const generateFirstRow = (size) => {
-  const letters = [null, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
   const values = letters.slice(0, size);
   let currentId = 1;
   const row = values.map((value, index) => {

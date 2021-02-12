@@ -18,12 +18,16 @@ const { ships: ushkovShips, shipIds: usakovShipIds, field: ushakovField } = usha
 const firstShoot = { coords: { x: 3, y: 3 }, result: 'offTarget' };
 const secondShoot = { coords: { x: 3, y: 4 }, result: 'wounded' };
 const thirdShoot = { coords: { x: 3, y: 5 }, result: 'killed' };
+
 const firstField = getFieldData();
 firstField[3][3].style = 'ship-area';
+
 const secondField = _.cloneDeep(firstField);
 secondField[4][3].style = 'ship';
+
 const thirdField = _.cloneDeep(secondField);
 thirdField[5][3].style = 'ship';
+
 const shipArea = calcArea([secondShoot.coords, thirdShoot.coords]);
 shipArea.forEach(({ x, y }) => {
   thirdField[y][x].style = 'ship-area';
@@ -47,10 +51,12 @@ emptyArea.forEach(({ x, y }) => {
 });
 const fourthShoot = { coords: { x: 3, y: 5 }, result: 'wounded' };
 const fifthSehoot = { coords: { x: 4, y: 4 }, result: 'wounded' };
-const gorizontalEnds = [{ x: 2, y: 4 }, { x: 5, y: 4 }];
+
 const verticalEnds = [{ x: 3, y: 3 }, { x: 3, y: 6 }];
 const fromVerticalEnsShoot = { coords: { x: 3, y: 3 }, result: 'offTarget' };
 const verticalRest = { x: 3, y: 6 };
+
+const gorizontalEnds = [{ x: 2, y: 4 }, { x: 5, y: 4 }];
 const fromGorisontalEnsShoot = { coords: { x: 2, y: 4 }, result: 'offTarget' };
 const gorizontalRest = { x: 5, y: 4 };
 
@@ -93,8 +99,10 @@ test('setting 10 ships on field 10x10 Ushakov', () => {
 test('Ushakov handleSootingResult({ coords, result })', () => {
   ushakov2.handleSootingResult(firstShoot);
   expect(ushakov2.enemyField).toEqual(firstField);
+
   ushakov2.handleSootingResult(secondShoot);
   expect(ushakov2.enemyField).toEqual(secondField);
+
   ushakov2.handleSootingResult(thirdShoot);
   expect(ushakov2.enemyField).toEqual(thirdField);
 });
@@ -104,12 +112,15 @@ test('Ushakov shoot() first variant', () => {
   ushakov3.setEnemyField(field1ForUshakovShootTest);
   expect(emptyArea).toContainEqual(ushakov3.shoot());
 });
+
 test('Ushakov shoot() second variant', () => {
   const ushakov4 = new Ushakov();
   ushakov4.setEnemyField(getFieldData());
+
   ushakov4.handleSootingResult(secondShoot);
   ushakov4.handleSootingResult(fourthShoot);
   expect(verticalEnds).toContainEqual(ushakov4.shoot());
+
   ushakov4.handleSootingResult(fromVerticalEnsShoot);
   expect(verticalRest).toEqual(ushakov4.shoot());
 
@@ -117,6 +128,7 @@ test('Ushakov shoot() second variant', () => {
   ushakov4.handleSootingResult(secondShoot);
   ushakov4.handleSootingResult(fifthSehoot);
   expect(gorizontalEnds).toContainEqual(ushakov4.shoot());
+
   ushakov4.handleSootingResult(fromGorisontalEnsShoot);
   expect(gorizontalRest).toEqual(ushakov4.shoot());
 });
