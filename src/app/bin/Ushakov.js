@@ -101,6 +101,7 @@ class Ushakov {
         });
         this.enemyShipCoords = [];
       },
+
     };
     if (!Object.keys(handleSootingMapping).includes(result)) {
       return new Error('Unknown shooting result');
@@ -115,8 +116,8 @@ class Ushakov {
   }
 
   setFlot(battleField, flot) {
-    this.setEnemyField([...battleField]);
-    const field = [...battleField];
+    this.setEnemyField(_.cloneDeep(battleField));
+    const field = _.cloneDeep(battleField);
     const { ships, shipIds } = { ...flot };
     shipIds.forEach((shipId) => {
       const iter = () => {
@@ -141,7 +142,14 @@ class Ushakov {
           field[y][x].style = 'ship-area';
         });
     });
-    return { ships, shipIds, field };
+    const clearedField = field.map((line) => line.map((cell) => {
+      const newCell = _.cloneDeep(cell);
+      if (cell.style === 'ship-area') {
+        newCell.style = cell.defaultStyle;
+      }
+      return newCell;
+    }));
+    return { ships, shipIds, field: clearedField };
   }
 }
 

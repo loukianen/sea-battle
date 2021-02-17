@@ -18,21 +18,26 @@ class Log extends React.Component {
           <h5 className="mt-2 color-ship-border">{i18next.t('ui.score')}</h5>
           <h5 className="mt-2 color-ship-border">{score}</h5>
         </div>
-        <table className="table table-borderless color-ship-border border-top border-info">
+        <table className="table-sm table-borderless color-ship-border border-top border-info">
           <tbody>
             <tr>
+              <th className="color-ship-border">{i18next.t('log.n')}</th>
               <th className="color-ship-border">{i18next.t('log.player')}</th>
               <th className="color-ship-border">{i18next.t('log.shoot')}</th>
               <th className="color-ship-border">{i18next.t('log.result')}</th>
             </tr>
             {log.map(([id, player, coords, result]) => {
               const playerName = i18next.t(`log.${player}`);
-              const { x, y } = coords;
-              const letterFromX = i18next.t(`field.${letters[x]}`);
-              const coordsValue = `${letterFromX}${y}`;
+              let coordsValue = null;
+              if (coords !== null) {
+                const { x, y } = coords;
+                const letterFromX = i18next.t(`field.${letters[x]}`);
+                coordsValue = `${letterFromX}${y}`;
+              }
               const resultValue = i18next.t(`log.${result}`);
               return (
                 <tr key={id}>
+                  <td>{id}</td>
                   <td>{playerName}</td>
                   <td>{coordsValue}</td>
                   <td>{resultValue}</td>

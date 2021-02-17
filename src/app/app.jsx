@@ -7,22 +7,12 @@ import reducer from './reducers/index';
 import generateFieldData from './bin/genFieldData';
 import makeFlot from './bin/makeFlot';
 import { getFieldSize } from './bin/utils';
-// import Game from './bin/game';
-/*
-const makeBattlefild = (field, ai, options) => {
-  const flot = ai.setFlot(field, makeFlot(options));
-  const battlefield = field;
-  const { ships, shipIds } = flot;
-  shipIds.forEach((id) => {
-    const coords = ships[id].getCoords();
-    coords.forEach(({ x, y }) => {
-      battlefield[y][x].style = 'ship';
-      battlefield[y][x].shipId = id;
-      // console.log(`Cell ${x} ${y}: ${JSON.stringify(battlefield[y][x])}`);
-    });
-  });
-  return battlefield;
-};*/
+import Ushakov from './bin/Ushakov';
+
+const ushakov = new Ushakov();
+const newFlot = makeFlot({ fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' });
+const newField = generateFieldData();
+const { ships, shipIds, field } = ushakov.setFlot(newField, newFlot);
 
 export default () => {
   // eslint-disable no-underscore-dangle 
@@ -34,16 +24,17 @@ export default () => {
     const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
     // const game = new Game(gameOptions);
     const language = 'auto';
-    const userField = generateFieldData(getFieldSize(gameOptions.fieldSize));
+    const userField = field; // generateFieldData(getFieldSize(gameOptions.fieldSize));
     const enemyField = generateFieldData(getFieldSize(gameOptions.fieldSize)); // makeBattlefild(generateFieldData(), enemy, gameOptions);
-    const gameState = 'choosingSettings'; // 'battleIsOn';
+    const gameState = 'settingFlot'; // choosingSettings'; // 'battleIsOn';
     const billboard = 'info.makeSetting';
     const flot = { ships: {}, shipIds: [] };
-    const userFlot = {};
+    const userFlot = { ships, shipIds};
     const shipInMove = null; // shipId, that took out the dock, but didn't put on the battlefield
-    const enemy = null;
-    const enemyFlot = null;
-    const enemyMap = null;
+    const enemy = new Ushakov(); // null;
+    const { ships: s, shipIds: si, field: f } = enemy.setFlot(generateFieldData(), makeFlot(gameOptions));
+    const enemyFlot =  { ships: s, shipIds: si }; // null;
+    const enemyMap = f; // null;
     const log = [];
     const score = 0;
     const activePlayer = null;

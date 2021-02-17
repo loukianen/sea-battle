@@ -2,17 +2,20 @@ import _ from 'lodash';
 import { combineReducers } from 'redux';
 import generateFieldData from '../bin/genFieldData';
 import makeFlot from '../bin/makeFlot';
-import { getFieldSize, getActivePlayer, upGradeCell } from '../bin/utils';
+import * as utils from '../bin/utils';
+// { getFieldSize, getActivePlayer, upGradeCell }
 
 const activePlayerReducer = (state = {}, action) => {
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
         case 'battleIsOn':
-          return getActivePlayer(action.payload.records);
+          return utils.getActivePlayer(action.payload.records);
         default:
           return state;
       }
+    case 'SHOOT':
+      return utils.getActivePlayer(action.payload.records);
     default:
       return state;
   }
@@ -27,9 +30,33 @@ const billboardReducer = (state = {}, action) => {
         case 'settingFlot':
           return 'info.setFlot';
         case 'battleIsOn':
-          return 'info.killEnemy';
+          switch (_.last(_.last(action.payload.records))) {
+            case 'started':
+              return `info.turn.${_.head(_.last(action.payload.records))}`;
+            case 'wounded':
+              return `info.wounded.${_.head(_.last(action.payload.records))}`;
+            case 'killed':
+              return `info.killed.${_.head(_.last(action.payload.records))}`;
+            case 'won':
+              return `info.won.${_.head(_.last(action.payload.records))}`;
+            default:
+              return `info.offTarget.${_.head(_.last(action.payload.records))}`;
+          }
         default:
           return state;
+      }
+    case 'SHOOT':
+      switch (_.last(_.last(action.payload.records))) {
+        case 'started':
+          return `info.turn.${_.head(_.last(action.payload.records))}`;
+        case 'wounded':
+          return `info.wounded.${_.head(_.last(action.payload.records))}`;
+        case 'killed':
+          return `info.killed.${_.head(_.last(action.payload.records))}`;
+        case 'won':
+          return `info.won.${_.head(_.last(action.payload.records))}`;
+        default:
+          return `info.offTarget.${_.head(_.last(action.payload.records))}`;
       }
     case 'SHOW_PUT_YOUR_SHIPS':
       return 'info.putYourShips';
@@ -55,14 +82,23 @@ const enemyReducer = (state = {}, action) => {
 };
 
 const enemyFieldReducer = (state = {}, action) => {
+  const newState = _.cloneDeep(state);
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
         case 'choosingSettings':
-          return generateFieldData(getFieldSize(action.payload.gameOptions.fieldSize));
+          return generateFieldData(utils.getFieldSize(action.payload.gameOptions.fieldSize));
         default:
           return state;
       }
+    case 'SHOOT':
+      action.payload.records.forEach(([player, { x, y }, result]) => {
+        if (player === 'user') {
+          const cell = newState[y][x];
+          newState[y][x] = utils.upGradeCell(cell, result);
+        }
+      });
+      return newState;
     default:
       return state;
   }
@@ -135,6 +171,11 @@ const gameStateReducer = (state = '', action) => {
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       return action.payload.newGameState;
+    case 'SHOOT':
+      if (_.last(_.last(action.payload.records)) === 'won') {
+        return 'finished';
+      }
+      return state;
     default:
       return state;
   }
@@ -150,16 +191,27 @@ const languageReducer = (state = 'auto', action) => {
 };
 
 const logReducer = (state = {}, action) => {
+  let lastId = _.head(_.head(state)) || 0;
+  const addNewRecords = (data) => data.map(
+    (item) => {
+      const curId = lastId + 1;
+      lastId = curId;
+      return [curId, ...item];
+    },
+  ).reduce((acc, record) => [record, ...acc], state);
+
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
         case 'choosingSettings':
           return [];
         case 'battleIsOn':
-          return action.payload.records.reduce((acc, record) => [record, ...acc], state);
+          return addNewRecords(action.payload.records);
         default:
           return state;
       }
+    case 'SHOOT':
+      return addNewRecords(action.payload.records);
     default:
       return state;
   }
@@ -201,21 +253,22 @@ const shipInMoveReducer = (state = null, action) => {
 
 const userFieldReducer = (state = [], action) => {
   const newState = [...state];
+  const markCells = (data) => data.forEach((record) => {
+    const [player, coords, result] = record;
+    if (player === 'enemy' && coords !== null) {
+      const { x, y } = coords;
+      const cell = newState[y][x];
+      newState[y][x] = utils.upGradeCell(cell, result);
+    }
+  });
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
         case 'choosingSettings':
-          return generateFieldData(getFieldSize(action.payload.gameOptions.fieldSize));
+          return generateFieldData(utils.getFieldSize(action.payload.gameOptions.fieldSize));
         case 'battleIsOn':
-          return action.payload.records.forEach((record) => {
-            const [player, coords, result] = record;
-            if (player === 'enemy') {
-              const { x, y } = coords;
-              const cell = newState[y][x];
-              newState[y][x] = upGradeCell(cell, result);
-            }
-            return newState;
-          });
+          markCells(action.payload.records);
+          return newState;
         default:
           return state;
       }
@@ -248,6 +301,9 @@ const userFieldReducer = (state = [], action) => {
         });
       });
       return newState;
+    case 'SHOOT':
+      markCells(action.payload.records);
+      return newState;
     default:
       return state;
   }
@@ -277,7 +333,6 @@ export default combineReducers({
   enemyFlot: enemyFlotReducer,
   enemyMap: enemyMapReducer,
   flot: flotReducer,
-  // game: gameReducer,
   gameOptions: gameOptionsReducer,
   gameState: gameStateReducer,
   language: languageReducer,

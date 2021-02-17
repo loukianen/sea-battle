@@ -5,7 +5,7 @@ import * as actions from '../actions/index';
 import generateFieldData from '../bin/genFieldData';
 import makeFlot from '../bin/makeFlot';
 import { getFieldSize } from '../bin/utils';
-import Ushakov from './Ushakov';
+import Ushakov from '../bin/Ushakov';
 import game from '../bin/game';
 
 const getButtonLabel = (gameState) => {
@@ -57,16 +57,9 @@ class Start extends React.Component {
       changeGameState,
       showPutYourShips,
       enemy,
-      enemyField,
-      enemyFlot,
-      enemyMap,
       flot,
       gameOptions,
       gameState,
-      language,
-      log,
-      score,
-      shipInMove,
       userField,
       userFlot,
     } = this.props;
@@ -82,14 +75,9 @@ class Start extends React.Component {
       if (flot.shipIds.length !== 0) {
         dispatch(showPutYourShips());
       }
-      const startRecord = game('start');
-      const [whoStarted] = startRecord;
-      if (whoStarted === 'enemy') {
-        const shootRecord = game('getShoot', { enemy, userField, userFlot });
-        dispatch(changeGameState({ newGameState, gameOptions, records: [startRecord, shootRecord] }));
-      } else {
-        dispatch(changeGameState({ newGameState, gameOptions, records: [startRecord] }));
-      }
+      const records = game('start', { enemy, userData: { userField, userFlot } });
+      // console.log(JSON.stringify(records));
+        dispatch(changeGameState({ newGameState, gameOptions, records }));
     } else {
       dispatch(changeGameState({ newGameState, gameOptions }));
     }

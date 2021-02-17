@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import i18next from 'i18next';
 import _ from 'lodash';
 import * as actions from '../actions/index';
+import game from '../bin/game';
 import { calcArea, isValidCoords } from '../bin/utils';
 
 const isPutingPosible = (area, ship, field) => {
@@ -25,15 +26,25 @@ const getAreaCoords = (ship, maxValue) => {
 
 const mapStateToProps = (state) => {
   const {
+    activePlayer,
     language,
     userField,
+    userFlot,
+    enemy,
     enemyField,
+    enemyFlot,
+    enemyMap,
     shipInMove,
   } = state;
   const props = {
+    activePlayer,
     language,
     userField,
+    userFlot,
+    enemy,
     enemyField,
+    enemyFlot,
+    enemyMap,
     shipInMove,
   };
   return props;
@@ -44,6 +55,7 @@ const actionCreators = {
   setDefaultStyleForCells: actions.setDefaultStyleForCells,
   putShipIntoUserDock: actions.putShipIntoUserDock,
   returnShipIntoDock: actions.returnShipIntoDock,
+  shoot: actions.shoot,
 };
 
 class Battlefield extends React.Component {
@@ -149,14 +161,35 @@ class Battlefield extends React.Component {
     e.stopPropagation();
   }
 
+  handleClick = (coords) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const {
+      shoot,
+      dispatch,
+      enemy,
+      enemyMap,
+      enemyFlot,
+      userField,
+      userFlot,
+    } = this.props;
+    const enemyData = { enemyField: enemyMap, enemyFlot };
+    const userData = { userField, userFlot };
+    const records = game('handleShoot', { shoot: coords, enemyData, enemy, userData });
+    console.log(JSON.stringify(records));
+    dispatch(shoot({ records }));
+  }
+
   renderHeaderCell(cell, cellValue) {
     const { id, style } = cell;
     return (<div key={id} className={style}>{cellValue}</div>);
   }
 
   renderEnemyFieldCell(cell, cellValue) {
-    const { id, style } = cell;
-    return (<div key={id} className={style}>{cellValue}</div>);
+    const { activePlayer } = this.props;
+    const { id, style, coords } = cell;
+    const handler = activePlayer === 'user' ? this.handleClick(coords) : null;
+    return (<div key={id} className={style} onClick={handler}>{cellValue}</div>);
   }
 
   renderUserFieldCell(cell, cellValue) {

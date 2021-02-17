@@ -24,6 +24,26 @@ export default {
       setFlot: 'Arrange the ships so that they do not touch each other',
       killEnemy: 'Good luck!',
       putYourShips: 'You must finish arrangement your ships before starting the battle',
+      turn: {
+        enemy: "The enemy's turn",
+        user: 'The your turn',
+      },
+      wounded: {
+        enemy: 'The enemy hit your ship!',
+        user: "You hit enemy's ship!",
+      },
+      killed: {
+        enemy: 'The enemy has sunk your ship!',
+        user: "You has sunk enemy's ship!",
+      },
+      won: {
+        enemy: 'The enemy won',
+        user: 'You won!',
+      },
+      offTarget: {
+        enemy: 'The enemy missed the target',
+        user: 'You missed the target',
+      },
     },
     field: {
       a: 'a',
@@ -36,6 +56,8 @@ export default {
       h: 'h',
       i: 'i',
       j: 'j',
+      X: 'X',
+      point: '●',
     },
     shipsTable: {
       header: 'Available ships',
@@ -56,6 +78,7 @@ export default {
       killed: 'killed',
       user: 'You',
       enemy: 'Enemy',
+      n: 'N',
       player: 'Player',
       shoot: 'Shoot',
       result: 'Result',

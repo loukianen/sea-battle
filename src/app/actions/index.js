@@ -32,6 +32,11 @@ export const setOptions = () => ({
   type: 'SET_OPTIONS',
 });
 
+export const shoot = (data) => ({
+  type: 'SHOOT',
+  payload: data,
+});
+
 export const showPutYourShips = () => ({
   type: 'SHOW_PUT_YOUR_SHIPS',
 });

@@ -17,27 +17,78 @@ const game = (action, state, randomizer = getRandomElFromColl) => {
   const functionMapping = {
     start: (data) => {
       const whoStarts = randomizer(['user', 'enemy']);
-      const shoots = whoStarts === 'enemy' ? game('getShoot', data) : null;
-      return [[whoStarts, null, 'started'], ..._.compact(shoots)];
+      const startRecord = [whoStarts, null, 'started'];
+      if (whoStarts === 'enemy') {
+        const { records, enemy, userField, userFlot } = game('getShoot', data);
+        return { records: [startRecord, ...records], enemy, userField, userFlot };
+      }
+      return { records: [startRecord], ...data };
     },
-    handleShoot: ({ shoot, enemyData: { enemyField, enemyFlot } }) => {
+    handleShoot: (gameData) => {
+      const {
+        shoot,
+        enemyField,
+        enemyFlot,
+        userField,
+        userFlot,
+        enemy,
+      } = gameData;
       const { x, y } = shoot;
-      const { style, shipId } = enemyField[y][x];
-      const result = style === 'ship' ? enemyFlot.ships[shipId].hit() : 'offTarget';
+      const { shipId } = enemyField[y][x];
+      enemyField[y][x].value = '●';
+      let result = 'offTarget';
+      if (shipId !== null) {
+        result = enemyFlot.ships[shipId].hit();
+        if (result === 'wounded' || result === 'killed') {
+          enemyField[y][x].style = 'killed-ship';
+          enemyField[y][x].value = 'X';
+        }
+      }
       const winnerRecord = isPlayerWon(enemyFlot) ? ['user', null, 'won'] : null;
-      return _.compact([['user', { x, y }, result], winnerRecord]);
-    },
-    getShoot: ({ enemy, userData: { userField, userFlot } }) => {
-      const iter = (records = []) => {
-        const { x, y } = enemy.shoot();
-        const { style, shipId } = userField[y][x];
-        const result = style === 'ship' ? userFlot.ships[shipId].hit() : 'offTarget';
-        const winnerRecord = isPlayerWon(userFlot) ? ['enemy', null, 'won'] : null;
-        const res = [...records, ..._.compact([['enemy', { x, y }, result], winnerRecord])];
-        return res;
+      if (result === 'offTarget') {
+        const enemyShootResults = game('getShoot', { enemy, userField, userFlot });
+        const records = [['user', { x, y }, result], ...enemyShootResults.records];
+        return {
+          records,
+          enemy: enemyShootResults.enemy,
+          enemyField,
+          enemyFlot,
+          userField: enemyShootResults.userField,
+          userFlot: enemyShootResults.userFlot,
+        };
+      }
+      const res = _.compact([['user', { x, y }, result], winnerRecord]);
+      return {
+        records: res,
+        enemy,
+        enemyField,
+        enemyFlot,
+        userField,
+        userFlot,
       };
-      const curRecord = iter();
-      return isPlayerHitShip(curRecord) ? iter(curRecord) : curRecord;
+    },
+    getShoot: (gameData) => {
+      const iter = (data, rec = []) => {
+        const { enemy, userField, userFlot } = data;
+        const { x, y } = enemy.shoot();
+        const { shipId } = userField[y][x];
+        userField[y][x].value = '●';
+        let result = 'offTarget';
+        if (shipId !== null) {
+          result = userFlot.ships[shipId].hit();
+          if (result === 'wounded' || result === 'killed') {
+            userField[y][x].style = 'killed-ship';
+            userField[y][x].value = 'X';
+          }
+        }
+        enemy.handleSootingResult({ coords: { x, y }, result });
+        const winnerRecord = isPlayerWon(userFlot) ? ['enemy', null, 'won'] : null;
+        const curRecord = [...rec, ..._.compact([['enemy', { x, y }, result], winnerRecord])];
+        return isPlayerHitShip(curRecord)
+          ? iter ({ enemy, userField, userFlot }, curRecord)
+          : { records: curRecord, enemy, userField, userFlot };
+      };
+      return iter(gameData);
     },
   };
   return functionMapping[action]

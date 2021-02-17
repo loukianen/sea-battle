@@ -45,11 +45,13 @@ export const isValidCoords = (coords, minValue, maxValue) => { // coords [{}, {}
     .every(({ x, y }) => (x >= minValue && x <= maxValue && y >= minValue && y <= maxValue));
 };
 
+export const getCompetitor = (player) => (player === 'user' ? 'enemy' : 'user');
+
 export const getActivePlayer = (records) => {
   let activePlayer;
   records.forEach((record) => {
-    const [player] = record;
-    activePlayer = player;
+    const [player, , result] = record;
+    activePlayer = result !== 'offTarget' ? player : getCompetitor(player);
   });
   return activePlayer;
 };
@@ -75,7 +77,7 @@ export const upGradeCell = (cell, actionResult) => {
     started: (c) => c,
     offTarget: (c) => {
       const newCell = _.cloneDeep(c);
-      newCell.value = '.';
+      newCell.value = 'point';
       return newCell;
     },
     wounded: (c) => {
@@ -90,6 +92,7 @@ export const upGradeCell = (cell, actionResult) => {
       newCell.value = 'X';
       return newCell;
     },
+    won: (c) => c,
   };
   return changeMapping[actionResult](cell);
 };

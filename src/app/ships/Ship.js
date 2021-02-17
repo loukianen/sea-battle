@@ -80,6 +80,10 @@ export default class {
     return true;
   }
 
+  setHealth(health) {
+    this.health = health;
+  }
+
   changeOrientation() {
     if (this.mainPoint !== null) {
       this.orientation = this.orientation === 'east' ? 'north' : 'east';
