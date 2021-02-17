@@ -2,36 +2,7 @@ import _ from 'lodash';
 import Ushakov from '../src/app/bin/Ushakov';
 import getFieldData from '../src/app/bin/genFieldData';
 import makeFlot from '../src/app/bin/makeFlot';
-import { calcArea, isValidCoords } from '../src/app/bin/utils';
-
-const isValidField = (battleField) => {
-  const maxValue = battleField.length - 1;
-  return battleField.every((line) => {
-    line.every((cell) => {
-      const { style, shipId, coords } = cell;
-      if (style === 'ship') {
-        const area = calcArea(coords).filter((item) => isValidCoords(item, 0, maxValue));
-        return area.every((areaCell) => (areaCell.style !== 'ship' || areaCell.shipId === shipId));
-      }
-      return true;
-    });
-    return true;
-  });
-};
-
-const calcShips = (battleField) => {
-  const shipIds = new Set();
-  const fieldSize = battleField.length;
-  for (let row = 0; row < fieldSize; row += 1) {
-    for (let col = 0; col < fieldSize; col += 1) {
-      const currentCell = battleField[row][col];
-      if (currentCell.style === 'ship') {
-        shipIds.add(currentCell.shipId);
-      }
-    }
-  }
-  return shipIds.size;
-};
+import * as utils from '../src/app/bin/utils';
 
 const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
 const newField = getFieldData();
@@ -42,8 +13,8 @@ test('setting 10 ships on field 10x10 Ushakov', () => {
   const { ships, shipIds, field } = ai.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
 
   const totalHealth = shipIds.reduce((acc, id) => acc + ships[id].getHealth(), 0);
-  expect(isValidField(field)).toBeTruthy();
-  expect(calcShips(field)).toBe(10);
+  expect(utils.isValidField(field)).toBeTruthy();
+  expect(utils.calcShips(field)).toBe(10);
   expect(totalHealth).toBe(20);
 });
 
@@ -55,7 +26,9 @@ const controlField = getFieldData();
 
 test.each(hitShipResults)('(shooting at empty cell, %j)', (shoot) => {
   controlField[shoot.y][shoot.x].value = 'progibited';
-  const area = calcArea(shoot).filter((item) => isValidCoords(item, 0, controlField.length - 1));
+  const area = utils.calcArea(shoot).filter(
+    (item) => utils.isValidCoords(item, 0, controlField.length - 1),
+  );
   area.forEach(({ x, y }) => {
     controlField[y][x].value = 'progibited';
   });
@@ -70,7 +43,7 @@ const emptyFieldCoords = _.flatten(
   aiForSinkShip.getEnemyField().map((line) => line.map((cell) => cell.coords)),
 );
 const shipCoords = [{ x: 5, y: 4 }, { x: 5, y: 5 }, { x: 5, y: 6 }];
-const shipArea = calcArea(shipCoords);
+const shipArea = utils.calcArea(shipCoords);
 const fildCoordsButSipAndArea = _.difference(emptyFieldCoords, [...shipCoords, ...shipArea]);
 const dataForSinkShip = [
   [

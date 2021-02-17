@@ -2,11 +2,7 @@ import React from 'react';
 import i18next from 'i18next';
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
-import generateFieldData from '../bin/genFieldData';
-import makeFlot from '../bin/makeFlot';
-import { getFieldSize } from '../bin/utils';
-import Ushakov from '../bin/Ushakov';
-import game from '../bin/game';
+import Game from '../bin/Game';
 
 const getButtonLabel = (gameState) => {
   switch (gameState) {
@@ -16,15 +12,6 @@ const getButtonLabel = (gameState) => {
       return i18next.t('ui.startBattle');
     default:
       return i18next.t('ui.newGame');
-  }
-};
-
-const getEnemy = (enemyName) => {
-  switch (enemyName) {
-    case 'ushakov':
-      return new Ushakov();
-    default:
-      throw new Error('Unknown enemy name');
   }
 };
 
@@ -56,8 +43,8 @@ class Start extends React.Component {
       dispatch,
       changeGameState,
       showPutYourShips,
-      enemy,
       flot,
+      game,
       gameOptions,
       gameState,
       userField,
@@ -65,21 +52,16 @@ class Start extends React.Component {
     } = this.props;
     const newGameState = getNewGameState(gameState);
     if (newGameState === 'settingFlot') {
-      const newEnemy = getEnemy(gameOptions.enemy);
-      const newField = generateFieldData(getFieldSize(gameOptions.fieldSize));
-      const newFlot = makeFlot(gameOptions);
-      const { ships, shipIds, field } = newEnemy.setFlot(newField, newFlot);
-      const newEnemyFlot = { ships, shipIds };
-      dispatch(changeGameState({ newGameState, gameOptions, newEnemy, newEnemyFlot, field }));
+      const newGame = new Game(gameOptions);
+      dispatch(changeGameState({ newGameState, gameOptions, newGame }));
     } else if (newGameState === 'battleIsOn') {
       if (flot.shipIds.length !== 0) {
         dispatch(showPutYourShips());
       }
-      const records = game('start', { enemy, userData: { userField, userFlot } });
-      // console.log(JSON.stringify(records));
-        dispatch(changeGameState({ newGameState, gameOptions, records }));
+      const records = game.start({ userField, userFlot });
+      dispatch(changeGameState({ newGameState, gameOptions, records, newGame: game }));
     } else {
-      dispatch(changeGameState({ newGameState, gameOptions }));
+      dispatch(changeGameState({ newGameState, gameOptions, newGame: game }));
     }
   }
   

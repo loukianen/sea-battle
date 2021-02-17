@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import generateFieldData from '../src/app/bin/genFieldData';
-import game from '../src/app/bin/game';
+import Game from '../src/app/bin/Game';
+import Ushakov from '../src/app/bin/Ushakov';
 import OneDeckShip from '../src/app/ships/OneDeckShip';
 import DoubleDeckShip from '../src/app/ships/DoubleDeckShip';
 import FakeEnemyForGetShoot from '../__fixtures__/FakeEnemyForGetShoot';
+import { isValidField, calcShips } from '../src/app/bin/utils';
 
 const makeDataForTest = () => {
   const field = generateFieldData();
@@ -29,12 +31,9 @@ const makeDataForTest = () => {
   return { field, flot, shoots };
 };
 
-const { shoots, flot, field } = makeDataForTest();
+const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
 
-const getShootTestData = [
-  [[shoots[3], shoots[0]], ['killed', 'offTarget']],
-  [shoots.slice(1, 3), ['wounded', 'killed', 'won']],
-];
+const { shoots, flot, field } = makeDataForTest();
 
 const handleShootTestDataUserWon = [
   [[shoots[1]], ['wounded']],
@@ -42,134 +41,78 @@ const handleShootTestDataUserWon = [
   [[shoots[3]], ['killed', 'won']],
 ];
 
-let gaugeUserField;
-let gaugeUserFlot;
-let gaugeEnemyField;
-let gaugeEnemyFlot;
+test('new game', () => {
+  const game = new Game(gameOptions);
 
-beforeEach(() => {
-  gaugeUserField = _.cloneDeep(field);
-  gaugeUserFlot = _.cloneDeep(flot);
-  gaugeEnemyField = _.cloneDeep(field);
-  gaugeEnemyFlot = _.cloneDeep(flot);
-});
-
-test('getShoot 1 series', () => {
-  let enemy = new FakeEnemyForGetShoot(shoots.slice(1));
-  enemy.setEnemyField(generateFieldData());
-
-  gaugeUserField[shoots[1].y][shoots[1].x].style = 'killed-ship';
-  gaugeUserField[shoots[1].y][shoots[1].x].value = 'X';
-  gaugeUserField[shoots[2].y][shoots[2].x].style = 'killed-ship';
-  gaugeUserField[shoots[2].y][shoots[2].x].value = 'X';
-  gaugeUserField[shoots[3].y][shoots[3].x].style = 'killed-ship';
-  gaugeUserField[shoots[3].y][shoots[3].x].value = 'X';
-
-  gaugeUserFlot.ships[1].setHealth(0);
-  gaugeUserFlot.ships[2].setHealth(0);
-
-  const shootResult = game(
-    'getShoot',
-    { enemy, userField: _.cloneDeep(field), userFlot: _.cloneDeep(flot) },
-  );
-  const { records, userField, userFlot } = shootResult;
-  const expectRecord = [
-    ['enemy', shoots[1], 'wounded'],
-    ['enemy', shoots[2], 'killed'],
-    ['enemy', shoots[3], 'killed'],
-    ['enemy', null, 'won'],
-  ];
-  expect(records).toEqual(expectRecord);
-  expect(userField).toEqual(gaugeUserField);
-  expect(userFlot).toEqual(gaugeUserFlot);
-});
-
-test('getShoot 2 series', () => {
-  let enemy = new FakeEnemyForGetShoot([shoots[3], shoots[0]]);
-  enemy.setEnemyField(generateFieldData());
-
-  gaugeUserField[shoots[3].y][shoots[3].x].style = 'killed-ship';
-  gaugeUserField[shoots[3].y][shoots[3].x].value = 'X';
-  gaugeUserField[shoots[0].y][shoots[0].x].value = '●';
-
-  gaugeUserFlot.ships[1].setHealth(0);
-
-  const shootResult = game(
-    'getShoot',
-    { enemy, userField: _.cloneDeep(field), userFlot: _.cloneDeep(flot) },
-  );
-  const { records, userField, userFlot } = shootResult;
-  const expectRecord = [['enemy', shoots[3], 'killed'], ['enemy', shoots[0], 'offTarget']];
-  expect(records).toEqual(expectRecord);
-  expect(userField).toEqual(gaugeUserField);
-  expect(userFlot).toEqual(gaugeUserFlot);
+  expect(game.enemy).toBeInstanceOf(Ushakov);
+  expect(game.enemyFlot.shipIds.length).toBe(10);
+  expect(Object.keys(game.enemyFlot.ships).length).toBe(10);
+  expect(isValidField(game.enemyMap)).toBeTruthy();
+  expect(calcShips(game.enemyMap)).toBe(10);
+  expect(game.userFlot).toEqual({ ships: {}, shipIds: [] });
+  expect(game.userMap).toEqual([]);
 });
 
 test('start', () => {
-  const enemy = new FakeEnemyForGetShoot(shoots.slice(0, 1));
-  enemy.setEnemyField(generateFieldData());
+  const game1 = new Game(gameOptions);
 
-  const dataUserStarted = { enemy, userField: _.cloneDeep(field), userFlot: _.cloneDeep(flot) };
-  const actionResultUserStarted = game('start', dataUserStarted, () => 'user');
+  const dataUserStarted = { userField: _.cloneDeep(field), userFlot: _.cloneDeep(flot) };
+  const actionResultUserStarted = game1.start(dataUserStarted, () => 'user');
   const expectRecordUserStarted = [['user', null, 'started']];
 
-  expect(actionResultUserStarted.records).toEqual(expectRecordUserStarted);
-  expect(actionResultUserStarted.userField).toEqual(gaugeUserField);
-  expect(actionResultUserStarted.userFlot).toEqual(gaugeUserFlot);
+  expect(actionResultUserStarted).toEqual(expectRecordUserStarted);
 
-  gaugeUserField[shoots[0].y][shoots[0].x].value = '●';
+  const game2 = new Game(gameOptions);
+  const enemy2 = new FakeEnemyForGetShoot(shoots.slice(0, 1));
+  enemy2.setEnemyField(_.cloneDeep(field));
+  game2.setEnemy(enemy2);
 
-  const dataEnemyStarted = { enemy, userField: _.cloneDeep(field), userFlot: _.cloneDeep(flot) };
-  const actionResultEnemyStarted = game('start', dataEnemyStarted, () => 'enemy');
+  const dataEnemyStarted = { userField: _.cloneDeep(field), userFlot: _.cloneDeep(flot) };
+  const actionResultEnemyStarted = game2.start(dataEnemyStarted, () => 'enemy');
   const expectRecordEnemyStarted = [
     ['enemy', null, 'started'],
     ['enemy', _.head(shoots), 'offTarget'],
   ];
 
-  expect(actionResultEnemyStarted.records).toEqual(expectRecordEnemyStarted);
-  expect(actionResultEnemyStarted.userField).toEqual(gaugeUserField);
-  expect(actionResultEnemyStarted.userFlot).toEqual(gaugeUserFlot);
+  expect(actionResultEnemyStarted).toEqual(expectRecordEnemyStarted);
 });
 
-test('handleShoot user off target', () => {
-  const shoot = _.head(shoots);
-  const enemy = new FakeEnemyForGetShoot(shoots.slice(0, 1));
-  enemy.setEnemyField(generateFieldData());
+test('handleEnemyShoot user off target, enemy won', () => {
+  const game = new Game(gameOptions);
+  const enemy = new FakeEnemyForGetShoot(shoots.slice(1));
+  enemy.setEnemyField(_.cloneDeep(field));
+  game.setEnemy(enemy);
+  game.setUserMap(_.cloneDeep(field));
+  game.setUserFlot(_.cloneDeep(flot));
+  game.setEnemyMap(_.cloneDeep(field));
+  game.setEnemyFlot(_.cloneDeep(flot));
 
-  gaugeEnemyField[shoots[0].y][shoots[0].x].value = '●';
-  gaugeUserField[shoots[0].y][shoots[0].x].value = '●';
+  const userShoot = _.head(shoots);
 
-  const data = {
-    enemy,
-    userField: _.cloneDeep(field),
-    userFlot: _.cloneDeep(flot),
-    shoot,
-    enemyField: _.cloneDeep(field),
-    enemyFlot: _.cloneDeep(flot),
-  };
-  const shootingResult = game('handleShoot', data);
-  const expectRecord = [['user', shoot, 'offTarget'], ['enemy', shoot, 'offTarget']];
-  
-  expect(shootingResult.records).toEqual(expectRecord);
-  expect(shootingResult.enemyField).toEqual(gaugeEnemyField);
-  expect(shootingResult.enemyFlot).toEqual(gaugeEnemyFlot);
-  expect(shootingResult.userField).toEqual(gaugeUserField);
-  expect(shootingResult.userFlot).toEqual(gaugeUserFlot);
+  const shootingResult = game.handleUserShoot(userShoot);
+  const expectRecord = [
+    ['user', userShoot, 'offTarget'],
+    ['enemy', shoots[1], 'wounded'],
+    ['enemy', shoots[2], 'killed'],
+    ['enemy', shoots[3], 'killed'],
+    ['enemy', null, 'won'],
+  ];
+
+  expect(shootingResult).toEqual(expectRecord);
 });
-/*
-test.each(handleShootTestDataUserWon)('(handleShoot user won, %j, %j)', (seriesShoots, expRecResults) => {
-  const enemy = new FakeEnemyForGetShoot(shoots.slice(0, 1));
-  const shoot = _.head(seriesShoots);
-  const data = {
-    enemy,
-    userData: userDataForHandleShoot,
-    shoot,
-    enemyData: enemyDataForHandleShoot,
-  };
-  const shootResult = game('handleShoot', data);
-  const expectRecord = expRecResults.map((result, index) => {
-    const coords = seriesShoots[index] ? seriesShoots[index] : null;
+
+const game3 = new Game(gameOptions);
+const enemy3 = new FakeEnemyForGetShoot(shoots.slice(1));
+enemy3.setEnemyField(_.cloneDeep(field));
+game3.setEnemy(enemy3);
+game3.setEnemyMap(_.cloneDeep(field));
+game3.setEnemyFlot(_.cloneDeep(flot));
+
+test.each(handleShootTestDataUserWon)('(handleShoot user won, %j, %j)', (userShoots, expectResults) => {
+  const shootResult = game3.handleUserShoot(_.head(userShoots));
+  const expectRecord = expectResults.map((result, index) => {
+    const coords = userShoots[index] ? userShoots[index] : null;
     return ['user', coords, result];
   });
   expect(shootResult).toEqual(expectRecord);
-});*/
+});

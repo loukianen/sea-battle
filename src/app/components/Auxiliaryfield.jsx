@@ -10,17 +10,14 @@ const mapStateToProps = (state) => {
   return props;
 };
 
-class Auxiliaryfield extends React.Component {
-  render() {
-    const { gameState } = this.props;
-    const curComponent = gameState === 'battleIsOn' ? Log : Flot;
-    return(
-      <div id="centerField" className="col d-flex flex-column mb-3">
-        <Info />
-        {gameState === 'battleIsOn' ? <Log /> : <Flot />}
-      </div>
-    );
-  }
-}
+const Auxiliaryfield = (props) => {
+  const { gameState } = props;
+  return(
+    <div id="centerField" className="col d-flex flex-column mb-3">
+      <Info />
+      {gameState === 'battleIsOn' || gameState === 'finished' ? <Log /> : <Flot />}
+    </div>
+  );
+};
 
 export default connect(mapStateToProps)(Auxiliaryfield);

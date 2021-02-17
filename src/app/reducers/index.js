@@ -3,7 +3,6 @@ import { combineReducers } from 'redux';
 import generateFieldData from '../bin/genFieldData';
 import makeFlot from '../bin/makeFlot';
 import * as utils from '../bin/utils';
-// { getFieldSize, getActivePlayer, upGradeCell }
 
 const activePlayerReducer = (state = {}, action) => {
   switch (action.type) {
@@ -65,22 +64,6 @@ const billboardReducer = (state = {}, action) => {
   }
 };
 
-const enemyReducer = (state = {}, action) => {
-  switch (action.type) {
-    case 'CHANGE_GAMESTATE':
-      switch (action.payload.newGameState) {
-        case 'choosingSettings':
-          return null;
-        case 'settingFlot':
-          return action.payload.newEnemy;
-        default:
-          return state;
-      }
-    default:
-      return state;
-  }
-};
-
 const enemyFieldReducer = (state = {}, action) => {
   const newState = _.cloneDeep(state);
   switch (action.type) {
@@ -92,51 +75,14 @@ const enemyFieldReducer = (state = {}, action) => {
           return state;
       }
     case 'SHOOT':
-      action.payload.records.forEach(([player, { x, y }, result]) => {
-        if (player === 'user') {
-          const cell = newState[y][x];
-          newState[y][x] = utils.upGradeCell(cell, result);
-        }
-      });
-      return newState;
+      return utils.markCells(action.payload.records, newState, 'user');
     default:
       return state;
   }
 };
 
-const enemyFlotReducer = (state = {}, action) => {
-  switch (action.type) {
-    case 'CHANGE_GAMESTATE':
-      switch (action.payload.newGameState) {
-        case 'choosingSettings':
-          return null;
-        case 'settingFlot':
-          return action.payload.newEnemyFlot;
-        default:
-          return state;
-      }
-    default:
-      return state;
-  }
-};
-
-const enemyMapReducer = (state = {}, action) => {
-  switch (action.type) {
-    case 'CHANGE_GAMESTATE':
-      switch (action.payload.newGameState) {
-        case 'choosingSettings':
-          return null;
-        case 'settingFlot':
-          return action.payload.field;
-        default:
-          return state;
-      }
-    default:
-      return state;
-  }
-};
-
-const flotReducer = (state = {}, action) => {
+const flotReducer = (state = { ships: {}, shipIds: [] }, action) => {
+//
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
@@ -150,7 +96,7 @@ const flotReducer = (state = {}, action) => {
     case 'TAKE_SHIP_OUT_DOCK':
       _.unset(state.ships, action.payload.getId());
       return {
-        ships: state.ships,
+        ships: { ...state.ships },
         shipIds: _.without(state.shipIds, action.payload.getId()),
       };
     case 'RETURN_SHIP_INTO_DOCK':
@@ -160,6 +106,22 @@ const flotReducer = (state = {}, action) => {
           ships: { ...state.ships, [action.payload.ship.getId()]: action.payload.ship },
           shipIds: [...state.shipIds, action.payload.ship.getId()],
         });
+    default:
+      return state;
+  }
+};
+
+const gameReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'CHANGE_GAMESTATE':
+      switch (action.payload.newGameState) {
+        case 'choosingSettings':
+          return null;
+        default:
+          return action.payload.newGame;
+      }
+    case 'SHOOT':
+      return action.payload.newGame;
     default:
       return state;
   }
@@ -253,63 +215,32 @@ const shipInMoveReducer = (state = null, action) => {
 
 const userFieldReducer = (state = [], action) => {
   const newState = [...state];
-  const markCells = (data) => data.forEach((record) => {
-    const [player, coords, result] = record;
-    if (player === 'enemy' && coords !== null) {
-      const { x, y } = coords;
-      const cell = newState[y][x];
-      newState[y][x] = utils.upGradeCell(cell, result);
-    }
-  });
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
         case 'choosingSettings':
           return generateFieldData(utils.getFieldSize(action.payload.gameOptions.fieldSize));
         case 'battleIsOn':
-          markCells(action.payload.records);
-          return newState;
+          return utils.markCells(action.payload.records, newState, 'enemy');
         default:
           return state;
       }
     case 'CHANGE_CELLS':
-      action.payload.forEach((element) => {
-        const { coords: { x, y }, options } = element;
-        options.forEach(([optionName, value]) => {
-          newState[y][x][optionName] = value;
-        });
-      });
-      return newState;
+      return utils.upGradeField(action.payload.coords, newState);
     case 'SET_DEFAULT_STYLE_FOR_CELLS':
-      action.payload.forEach(({ x, y }) => {
-        newState[y][x].style = newState[y][x].defaultStyle;
-      });
-      return newState;
+      return utils.setDefaultStyle(action.payload, newState);
     case 'PUT_SHIP_INTO_USER_DOCK':
-      action.payload.coords.forEach((element) => {
-        const { coords: { x, y }, options } = element;
-        options.forEach(([optionName, value]) => {
-          newState[y][x][optionName] = value;
-        });
-      });
-      return newState;
+      return utils.upGradeField(action.payload.coords, newState);
     case 'RETURN_SHIP_INTO_DOCK':
-      action.payload.coords.forEach((element) => {
-        const { coords: { x, y }, options } = element;
-        options.forEach(([optionName, value]) => {
-          newState[y][x][optionName] = value;
-        });
-      });
-      return newState;
+      return utils.upGradeField(action.payload.coords, newState);
     case 'SHOOT':
-      markCells(action.payload.records);
-      return newState;
+      return utils.markCells(action.payload.records, newState, 'enemy');
     default:
       return state;
   }
 };
 
-const userFlotReducer = (state = {}, action) => {
+const userFlotReducer = (state = { ships: {}, shipIds: [] }, action) => {
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
@@ -319,7 +250,10 @@ const userFlotReducer = (state = {}, action) => {
           return state;
       }
     case 'PUT_SHIP_INTO_USER_DOCK':
-      return { ...state, [action.payload.ship.getId()]: action.payload.ship };
+      return {
+        ships: { ...state.ships, [action.payload.ship.getId()]: action.payload.ship },
+        shipIds: [...state.shipIds, action.payload.ship.getId()],
+      };
     default:
       return state;
   }
@@ -328,11 +262,9 @@ const userFlotReducer = (state = {}, action) => {
 export default combineReducers({
   activePlayer: activePlayerReducer,
   billboard: billboardReducer,
-  enemy: enemyReducer,
   enemyField: enemyFieldReducer,
-  enemyFlot: enemyFlotReducer,
-  enemyMap: enemyMapReducer,
   flot: flotReducer,
+  game: gameReducer,
   gameOptions: gameOptionsReducer,
   gameState: gameStateReducer,
   language: languageReducer,

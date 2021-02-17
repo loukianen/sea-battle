@@ -74,8 +74,9 @@ export default {
     log: {
       started: 'начал',
       offTarget: 'мимо',
-      wounded: 'ранен',
-      killed: 'убит',
+      wounded: 'ранил',
+      killed: 'убил',
+      won: 'победил',
       user: 'Вы',
       enemy: 'Враг',
       n: '№',

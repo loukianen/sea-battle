@@ -45,6 +45,35 @@ export const isValidCoords = (coords, minValue, maxValue) => { // coords [{}, {}
     .every(({ x, y }) => (x >= minValue && x <= maxValue && y >= minValue && y <= maxValue));
 };
 
+export const isValidField = (battleField) => {
+  const maxValue = battleField.length - 1;
+  return battleField.every((line) => {
+    line.every((cell) => {
+      const { style, shipId, coords } = cell;
+      if (style === 'ship') {
+        const area = calcArea(coords).filter((item) => isValidCoords(item, 0, maxValue));
+        return area.every((areaCell) => (areaCell.style !== 'ship' || areaCell.shipId === shipId));
+      }
+      return true;
+    });
+    return true;
+  });
+};
+
+export const calcShips = (battleField) => {
+  const shipIds = new Set();
+  const fieldSize = battleField.length;
+  for (let row = 0; row < fieldSize; row += 1) {
+    for (let col = 0; col < fieldSize; col += 1) {
+      const currentCell = battleField[row][col];
+      if (currentCell.style === 'ship') {
+        shipIds.add(currentCell.shipId);
+      }
+    }
+  }
+  return shipIds.size;
+};
+
 export const getCompetitor = (player) => (player === 'user' ? 'enemy' : 'user');
 
 export const getActivePlayer = (records) => {
@@ -74,7 +103,6 @@ export const getFieldSize = (fieldSizeName) => {
 
 export const upGradeCell = (cell, actionResult) => {
   const changeMapping = {
-    started: (c) => c,
     offTarget: (c) => {
       const newCell = _.cloneDeep(c);
       newCell.value = 'point';
@@ -92,7 +120,38 @@ export const upGradeCell = (cell, actionResult) => {
       newCell.value = 'X';
       return newCell;
     },
-    won: (c) => c,
   };
   return changeMapping[actionResult](cell);
+};
+
+export const markCells = (data, state, fieldOwner) => {
+  const newState = state;
+  data.forEach((record) => {
+    const [player, coords, result] = record;
+    if (player === fieldOwner && coords !== null) {
+      const { x, y } = coords;
+      const cell = newState[y][x];
+      newState[y][x] = upGradeCell(cell, result);
+    }
+  });
+  return newState;
+};
+
+export const upGradeField = (data, state) => {
+  const newState = state;
+  data.forEach((element) => {
+    const { coords: { x, y }, options } = element;
+    options.forEach(([optionName, value]) => {
+      newState[y][x][optionName] = value;
+    });
+  });
+  return newState;
+};
+
+export const setDefaultStyle = (data, state) => {
+  const newState = state;
+  data.forEach(({ x, y }) => {
+    newState[y][x].style = newState[y][x].defaultStyle;
+  });
+  return newState;
 };

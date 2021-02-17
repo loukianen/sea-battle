@@ -74,8 +74,9 @@ export default {
     log: {
       started: 'started',
       offTarget: 'off target',
-      wounded: 'wounded',
-      killed: 'killed',
+      wounded: 'did wound',
+      killed: 'did kill',
+      won: 'won',
       user: 'You',
       enemy: 'Enemy',
       n: 'N',

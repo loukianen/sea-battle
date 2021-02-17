@@ -49,7 +49,6 @@ class Ushakov {
   }
 
   shoot() {
-    // console.log(JSON.stringify(this.enemyShipCoords));
     // first variant is a random shooting at all empty cells;
     if (_.isEmpty(this.enemyShipCoords)) {
       const { cells, cellIds } = getEmptyCells(this.enemyField);
@@ -72,11 +71,11 @@ class Ushakov {
         { [mainLine]: _.last(lines[mainLine]) + 1, [slaveLine]: lines[slaveLine][0] },
       ];
       const validCoordsForShooting = getValidCoords(this.enemyField, coordsForShooting);
-      // console.log(JSON.stringify(this.enemyShipCoords));
       return getRandomElFromColl(validCoordsForShooting);
     }
     // last variant - random shooting at possible coordinates.
     // 'Without' - means without corners in shipArea
+    // 'shipArea' - cells around the ship
     const coords = calcArea(this.enemyShipCoords[0], 'without');
     const validCoords = getValidCoords(this.enemyField, coords);
     return getRandomElFromColl(validCoords);

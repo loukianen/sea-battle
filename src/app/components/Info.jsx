@@ -7,15 +7,13 @@ const mapStateToProps = (state) => {
   const props = { language, billboard };
   return props;
 };
-
-class Info extends React.Component {
-  render() {
-    const { billboard } = this.props;
-    return (
-      <div className="messagefield d-flex align-items-center justify-content-center rounded color-ship-border">
-        <div><b>{i18next.t(billboard)}</b></div>
-      </div>);
-  }
-}
+const Info = (props) => {
+  const { billboard } = props;
+  return (
+    <div className="messagefield d-flex align-items-center justify-content-center rounded color-ship-border">
+      <div><b>{i18next.t(billboard)}</b></div>
+    </div>
+  );
+};
 
 export default connect(mapStateToProps)(Info);

@@ -58,6 +58,10 @@ img {
   border-top: var(--border-thick) solid var(--info);
   border-right: var(--border-thin) solid var(--info);
   border-bottom: var(--border-thin) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -66,6 +70,10 @@ img {
   border-top: var(--border-thick) solid var(--info);
   border-right: var(--border-thick) solid var(--info);
   border-bottom: var(--border-thin) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -74,6 +82,10 @@ img {
   border-top: var(--border-thick) solid var(--info);
   border-right: var(--border-thin) solid var(--info);
   border-bottom: var(--border-thin) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -82,6 +94,10 @@ img {
   border-top: var(--border-thin) solid var(--info);
   border-right: var(--border-thin) solid var(--info);
   border-bottom: var(--border-thick) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -90,6 +106,10 @@ img {
   border-top: var(--border-thin) solid var(--info);
   border-right: var(--border-thick) solid var(--info);
   border-bottom: var(--border-thick) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -98,6 +118,10 @@ img {
   border-top: var(--border-thin) solid var(--info);
   border-right: var(--border-thin) solid var(--info);
   border-bottom: var(--border-thick) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -106,6 +130,10 @@ img {
   border-top: var(--border-thin) solid var(--info);
   border-right: var(--border-thin) solid var(--info);
   border-bottom: var(--border-thin) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -114,6 +142,10 @@ img {
   border-top: var(--border-thin) solid var(--info);
   border-right: var(--border-thick) solid var(--info);
   border-bottom: var(--border-thin) solid var(--info);
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--ship-border);
   background-color: var(--bg-field);
 }
 
@@ -130,6 +162,7 @@ img {
   text-align: center;
   font-weight: bold;
   font-style: italic;
+  color: var(--ship-border);
 }
 
 .cell30x30 {

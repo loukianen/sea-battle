@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { calcArea, isValidCoords } from '../src/app/bin/utils';
 
 export default class FakeEnemyForGetShoot {

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import i18next from 'i18next';
 import _ from 'lodash';
 import * as actions from '../actions/index';
-import game from '../bin/game';
 import { calcArea, isValidCoords } from '../bin/utils';
 
 const isPutingPosible = (area, ship, field) => {
@@ -11,7 +10,6 @@ const isPutingPosible = (area, ship, field) => {
   for (const cell of coords) {
     const { x, y } = cell;
     const style = field[y][x].style;
-    // console.log(cell);
     if (style === 'ship-wrong' || style === 'ship-area-wrong') {
       return false;
     }
@@ -30,10 +28,8 @@ const mapStateToProps = (state) => {
     language,
     userField,
     userFlot,
-    enemy,
+    game,
     enemyField,
-    enemyFlot,
-    enemyMap,
     shipInMove,
   } = state;
   const props = {
@@ -41,10 +37,8 @@ const mapStateToProps = (state) => {
     language,
     userField,
     userFlot,
-    enemy,
+    game,
     enemyField,
-    enemyFlot,
-    enemyMap,
     shipInMove,
   };
   return props;
@@ -92,7 +86,7 @@ class Battlefield extends React.Component {
     const shipArea = shipInMove.getArea();
     const shipCoordsData = this.makeDataForChange(shipCoords, 'ship', 'ship-wrong');
     const areaCoordsData = this.makeDataForChange(shipArea, 'ship-area', 'ship-area-wrong');
-    dispatch(changeCells([...shipCoordsData, ...areaCoordsData]));
+    dispatch(changeCells({ coords: [...shipCoordsData, ...areaCoordsData] }));
   }
 
   handlerDragLeave = (mainPoint) => (e) => {
@@ -118,7 +112,7 @@ class Battlefield extends React.Component {
     const validCoordsForCleaning = coordsForCleaning
       .filter((coords) => isValidCoords(coords, 1, maxCoordValue));
 
-    dispatch(changeCells(this.makeDataForClean(validCoordsForCleaning)));
+    dispatch(changeCells({ coords: this.makeDataForClean(validCoordsForCleaning) }));
   }
 
   handlerDrop = () => () => {
@@ -164,20 +158,11 @@ class Battlefield extends React.Component {
   handleClick = (coords) => (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const {
-      shoot,
-      dispatch,
-      enemy,
-      enemyMap,
-      enemyFlot,
-      userField,
-      userFlot,
-    } = this.props;
-    const enemyData = { enemyField: enemyMap, enemyFlot };
-    const userData = { userField, userFlot };
-    const records = game('handleShoot', { shoot: coords, enemyData, enemy, userData });
+    const { shoot, dispatch, game } = this.props;
+    const records = game.handleUserShoot(coords);
+    console.log(JSON.stringify(coords));
     console.log(JSON.stringify(records));
-    dispatch(shoot({ records }));
+    dispatch(shoot({ records, newGame: game }));
   }
 
   renderHeaderCell(cell, cellValue) {
