@@ -1,9 +1,9 @@
 export default {
   translation: {
     ui: {
-      mainHeader: 'Sea battle',
-      enemyFlot: 'Enemy flot',
-      userFlot: 'Your flot',
+      mainHeader: 'Battleship',
+      enemyFlot: "Enemy's fleet",
+      userFlot: 'Your fleet',
       navStart: 'Start game',
       startBattle: 'Start battle',
       newGame: 'New game',
