@@ -27,6 +27,7 @@ module.exports = {
       patterns: [
         { from: "src/img", to: "img" },
         { from: "src/css", to: "css" },
+        { from: "src/scripts", to: "scripts" },
       ],
     }),
   ],
@@ -56,6 +57,18 @@ module.exports = {
             loader: 'file-loader',
           }
         ],
+      },
+      {
+        test: /\.(js)$/,
+        include: [
+            path.resolve(__dirname, '/scripts')
+        ],
+        use: [{
+            loader: 'file-loader',
+            options: {
+                name: '[name].[ext]',
+            }
+        }]
       },
     ],
   },

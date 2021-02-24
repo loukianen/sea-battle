@@ -5,7 +5,7 @@ import Language from './Language.jsx';
 
 const Nav = () => {
   return(
-    <ul className="nav flex-row justify-content-end">
+    <ul className="nav flex-column flex-md-row justify-content-end">
       <Start />
       <Options />
       <Language />
