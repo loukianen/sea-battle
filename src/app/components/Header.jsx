@@ -4,10 +4,10 @@ import i18next from 'i18next';
 import cn from 'classnames';
 
 const Header = () => {
-  const viewportWidgh = window.visualViewport.width;
+  // const viewportWidgh = window.visualViewport.width;
   const mainHeaderClass = cn('text-info', 'text-center', 'w-100', {
-    'display-1': viewportWidgh >= 768,
-    'display-3': viewportWidgh < 768,
+    'display-1': true, // viewportWidgh >= 768,
+    // 'display-3': viewportWidgh < 768,
   });
   return(
     <div className="justify-content-center w-100 d-flex flex-column flex-md-row">
