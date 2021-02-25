@@ -155,6 +155,9 @@ var DragDropTouch;
         // ** event handlers
         DragDropTouch.prototype._touchstart = function (e) {
             var _this = this;
+
+            e.preventDefault(); // I put it !!!!!!!!!
+
             if (this._shouldHandle(e)) {
                 // raise double-click and prevent zooming
                 if (Date.now() - this._lastClick < DragDropTouch._DBLCLICK) {
@@ -363,7 +366,6 @@ var DragDropTouch;
                 this._copyProps(evt, t, DragDropTouch._ptProps);
                 evt.dataTransfer = this._dataTransfer;
                 target.dispatchEvent(evt);
-                alert(`dispatchEvent. evt.defaultPrevented: ${evt.defaultPrevented}`);
                 return evt.defaultPrevented;
             }
             return false;
