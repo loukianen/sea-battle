@@ -57,7 +57,7 @@ class Flot extends React.Component {
   }
 
   handleDoubleClick = (className) => (e) => {
-    // e.peventDefault();
+    e.stopPropagation();
     const newState = generateDefaultDocksOrientation();
     const orientation = this.state.docksOrientation[className] === 'east' ? 'north' : 'east';
     newState[className] = orientation;
@@ -65,7 +65,7 @@ class Flot extends React.Component {
   }
 
   handleDragstart = (className) => (e) => {
-    // e.peventDefault();
+    e.stopPropagation();
     e.dataTransfer.dropEffect = 'none';
     e.dataTransfer.effectAllowed = 'copy';
     const { dispatch, takeShipOutDock, flot } = this.props;

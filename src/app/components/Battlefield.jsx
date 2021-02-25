@@ -29,6 +29,7 @@ const mapStateToProps = (state) => {
     userField,
     userFlot,
     game,
+    gameState,
     enemyField,
     shipInMove,
   } = state;
@@ -38,6 +39,7 @@ const mapStateToProps = (state) => {
     userField,
     userFlot,
     game,
+    gameState,
     enemyField,
     shipInMove,
   };
@@ -171,9 +173,10 @@ class Battlefield extends React.Component {
   }
 
   renderEnemyFieldCell(cell, cellValue) {
-    const { activePlayer } = this.props;
+    const { activePlayer, gameState } = this.props;
     const { id, style, coords } = cell;
-    const handler = activePlayer === 'user' ? this.handleClick(coords) : null;
+    const handler = activePlayer === 'user' && gameState === 'battleIsOn'
+      ? this.handleClick(coords) : null;
     return (<div key={id} className={style} onClick={handler}>{cellValue}</div>);
   }
 

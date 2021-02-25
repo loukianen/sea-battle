@@ -8,7 +8,7 @@
     "build": "webpack --config prod.webpack.config.js",
     "start": "webpack serve --config dev.webpack.config.js",
     "test": "jest",
-    "lint": "npx lint ."
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
