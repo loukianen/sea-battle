@@ -363,6 +363,7 @@ var DragDropTouch;
                 this._copyProps(evt, t, DragDropTouch._ptProps);
                 evt.dataTransfer = this._dataTransfer;
                 target.dispatchEvent(evt);
+                alert(`dispatchEvent. evt.defaultPrevented: ${evt.defaultPrevented}`);
                 return evt.defaultPrevented;
             }
             return false;

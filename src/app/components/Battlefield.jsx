@@ -175,7 +175,8 @@ class Battlefield extends React.Component {
   renderEnemyFieldCell(cell, cellValue) {
     const { activePlayer, gameState } = this.props;
     const { id, style, coords } = cell;
-    const handler = activePlayer === 'user' && gameState === 'battleIsOn'
+    const handler = activePlayer === 'user'
+      && gameState === 'battleIsOn' && style !== 'killed-ship'
       ? this.handleClick(coords) : null;
     return (<div key={id} className={style} onClick={handler}>{cellValue}</div>);
   }
