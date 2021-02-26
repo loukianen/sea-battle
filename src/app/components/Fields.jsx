@@ -4,8 +4,8 @@ import Auxiliaryfield from './Auxiliaryfield.jsx';
 
 const Fields = () => {
   return(
-    <div className="container mt-5">
-      <div className="d-flex flex-column flex-md-row text-center align-items-center align-items-sm-end">
+    <div className="mt-3">
+      <div className="row d-flex flex-column flex-md-row text-center align-items-center align-items-md-end">
         <Battlefield owner="enemy" />
         <Auxiliaryfield />
         <Battlefield owner="user" />

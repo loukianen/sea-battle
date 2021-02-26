@@ -36,6 +36,7 @@ img {
   height: 25%;
   min-height: 70px;
   border: 3px solid var(--info);
+  overflow-y: auto;
 }
 
 .shipsfield {
@@ -224,8 +225,4 @@ img {
   width: 25px;
   height: 20px;
   margin: 5px 0;
-}
-
-.score-container {
-  max-height: 30px;
 }

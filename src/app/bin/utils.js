@@ -101,6 +101,24 @@ export const getFieldSize = (fieldSizeName) => {
   }
 };
 
+const evaluateResult = (result) => {
+  switch (result) {
+    case 'offTarget':
+      return -1;
+    case 'wounded':
+      return 10;
+    case 'killed':
+      return 5;
+    default:
+      return 0;
+  }
+};
+
+export const getScore = (records) => records.reduce((acc, [player, , result]) => {
+  const value = evaluateResult(result);
+  return player === 'user' ? acc + value : acc - value;
+}, 0);
+
 export const upGradeCell = (cell, actionResult) => {
   const changeMapping = {
     offTarget: (c) => {

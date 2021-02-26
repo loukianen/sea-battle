@@ -6,11 +6,11 @@ import cn from 'classnames';
 const Header = () => {
   // const viewportWidgh = window.visualViewport.width;
   const mainHeaderClass = cn('text-info', 'text-center', 'w-100', {
-    'display-1': true, // viewportWidgh >= 768,
+    'display-2': true, // viewportWidgh >= 768,
     // 'display-3': viewportWidgh < 768,
   });
   return(
-    <div className="justify-content-center w-100 d-flex flex-column flex-md-row">
+    <div className="d-flex flex-column flex-md-row justify-content-center w-100">
       <div className="d-flex justify-content-center img-box">
         <img className="rounded" id="logo" src="img/logo_356_x_200.jpg" alt="ship" />
       </div>

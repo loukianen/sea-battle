@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 const Auxiliaryfield = (props) => {
   const { gameState } = props;
   return(
-    <div id="centerField" className="col d-flex flex-column mb-3">
+    <div id="centerField" className="d-flex flex-column mb-3">
       <Info />
       {gameState === 'battleIsOn' || gameState === 'finished' ? <Log /> : <Flot />}
     </div>

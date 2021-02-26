@@ -11,7 +11,7 @@ const Info = (props) => {
   const { billboard } = props;
   return (
     <div className="messagefield d-flex align-items-center justify-content-center rounded color-ship-border">
-      <div><b>{i18next.t(billboard)}</b></div>
+      <div className="p-1"><b>{i18next.t(billboard)}</b></div>
     </div>
   );
 };

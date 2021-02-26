@@ -9,8 +9,8 @@ import { getFieldSize } from './bin/utils';
 
 export default () => {
   // eslint-disable no-underscore-dangle 
-  // const ext = window.__REDUX_DEVTOOLS_EXTENSION__; // uncomment for plug in
-  // const devtoolMiddleware = ext && ext(); // uncomment for plug in
+  const ext = window.__REDUX_DEVTOOLS_EXTENSION__; // uncomment for plug in
+  const devtoolMiddleware = ext && ext(); // uncomment for plug in
   // eslint-enable
 
   const makeInitialState = () => {
@@ -45,7 +45,7 @@ export default () => {
   };
 
   // For plug in REDUX_DEVTOOLS edd third argument 'devtoolMiddleware' to 'createStore'
-  const store = createStore(reducer, makeInitialState()); // , devtoolMiddleware);
+  const store = createStore(reducer, makeInitialState(), devtoolMiddleware);
 
   render(
     <Provider store={store}>

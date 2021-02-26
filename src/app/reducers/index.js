@@ -185,9 +185,13 @@ const scoreReducer = (state = {}, action) => {
       switch (action.payload.newGameState) {
         case 'choosingSettings':
           return 0;
+        case 'battleIsOn':
+          return state + utils.getScore(action.payload.records);
         default:
           return state;
       }
+    case 'SHOOT':
+      return state + utils.getScore(action.payload.records);
     default:
       return state;
   }
@@ -245,7 +249,7 @@ const userFlotReducer = (state = { ships: {}, shipIds: [] }, action) => {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
         case 'choosingSettings':
-          return {};
+          return { ships: {}, shipIds: [] };
         default:
           return state;
       }
