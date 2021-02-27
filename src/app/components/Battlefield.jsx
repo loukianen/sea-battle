@@ -162,8 +162,6 @@ class Battlefield extends React.Component {
     e.stopPropagation();
     const { shoot, dispatch, game } = this.props;
     const records = game.handleUserShoot(coords);
-    console.log(JSON.stringify(coords));
-    console.log(JSON.stringify(records));
     dispatch(shoot({ records, newGame: game }));
   }
 

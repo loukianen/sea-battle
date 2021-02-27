@@ -37,6 +37,7 @@ export const calcArea = (data, corners = 'with') => { // corners 'with' or 'with
 };
 
 export const isValidCoords = (coords, minValue, maxValue) => { // coords [{}, {}] or {}
+  // console.log(coords, minValue, maxValue);
   if (_.isEmpty(coords)) {
     return false;
   }
@@ -108,7 +109,7 @@ const evaluateResult = (result) => {
     case 'wounded':
       return 10;
     case 'killed':
-      return 5;
+      return 15;
     default:
       return 0;
   }
@@ -145,11 +146,26 @@ export const upGradeCell = (cell, actionResult) => {
 export const markCells = (data, state, fieldOwner) => {
   const newState = state;
   data.forEach((record) => {
-    const [player, coords, result] = record;
+    const [player, coords, result, additionalData] = record;
     if (player === fieldOwner && coords !== null) {
       const { x, y } = coords;
       const cell = newState[y][x];
       newState[y][x] = upGradeCell(cell, result);
+    }
+    if (fieldOwner === 'user' && result === 'won' && additionalData) {
+      additionalData.forEach((line, y) => line.forEach((cell, x) => {
+        if (cell.style === 'ship' && newState[y][x].style !== 'killed-ship') {
+          newState[y][x].style = 'ship';
+        }
+      }));
+    }
+    if (fieldOwner === 'user' && result === 'killed' && additionalData) {
+      const area = calcArea(additionalData);
+      const validArea = area.filter((item) => isValidCoords(item, 1, newState.length - 1));
+      validArea.forEach(({ x, y }) => {
+        const cell = newState[y][x];
+        newState[y][x] = upGradeCell(cell, 'offTarget');
+      });
     }
   });
   return newState;

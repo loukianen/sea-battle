@@ -82,7 +82,6 @@ const enemyFieldReducer = (state = {}, action) => {
 };
 
 const flotReducer = (state = { ships: {}, shipIds: [] }, action) => {
-//
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {

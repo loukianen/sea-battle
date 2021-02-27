@@ -21,7 +21,7 @@ const isPlayerWon = (competitorFlot) => {
 
 const isPlayerHitShip = (records) => {
   const lastRecord = _.last(records);
-  const lastResult = _.last(lastRecord);
+  const lastResult = lastRecord[2];
   return ['wounded', 'killed'].includes(lastResult);
 };
 
@@ -44,13 +44,17 @@ class Game {
     if (shipId !== null) {
       result = this.enemyFlot.ships[shipId].hit();
     }
+    // ship coords for render area around killed ship for user
+    const curRecord = result === 'killed'
+      ? ['user', { x, y }, result, this.enemyFlot.ships[shipId].getCoords()]
+      : ['user', { x, y }, result];
     const winnerRecord = isPlayerWon(this.getEnemyFlot()) ? ['user', null, 'won'] : null;
     if (result === 'offTarget') {
       const enemyShootResults = this.getEnemyShoot();
-      const records = [['user', { x, y }, result], ...enemyShootResults];
+      const records = [curRecord, ...enemyShootResults];
       return records;
     }
-    const res = _.compact([['user', { x, y }, result], winnerRecord]);
+    const res = _.compact([curRecord, winnerRecord]);
     return res;
   }
 
@@ -71,12 +75,14 @@ class Game {
         result = this.userFlot.ships[shipId].hit();
       }
       this.enemy.handleSootingResult({ coords: { x, y }, result });
-      const winnerRecord = isPlayerWon(this.getUserFlot()) ? ['enemy', null, 'won'] : null;
-      const curRecord = [
+      // enemy map for render not killed enemy ship for user
+      const winnerRecord = isPlayerWon(this.getUserFlot())
+        ? ['enemy', null, 'won', this.getEnemyMap()] : null;
+      const finalyRecord = [
         ...previousRecords,
         ..._.compact([['enemy', { x, y }, result], winnerRecord]),
       ];
-      return isPlayerHitShip(curRecord) ? iter(curRecord) : curRecord;
+      return isPlayerHitShip(finalyRecord) ? iter(finalyRecord) : finalyRecord;
     };
     return iter();
   }

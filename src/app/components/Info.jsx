@@ -10,8 +10,8 @@ const mapStateToProps = (state) => {
 const Info = (props) => {
   const { billboard } = props;
   return (
-    <div className="messagefield d-flex align-items-center justify-content-center rounded color-ship-border">
-      <div className="p-1"><b>{i18next.t(billboard)}</b></div>
+    <div className="messagefield d-flex justify-content-center rounded color-ship-border">
+      <div className="p-1 align-self-center  font-weight-bold">{i18next.t(billboard)}</div>
     </div>
   );
 };

@@ -29,6 +29,7 @@ img {
 
 #centerField {
   justify-content: center;
+  max-width: 400 px;
 }
 
 .messagefield {

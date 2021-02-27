@@ -36,9 +36,9 @@ const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
 const { shoots, flot, field } = makeDataForTest();
 
 const handleShootTestDataUserWon = [
-  [[shoots[1]], ['wounded']],
-  [[shoots[2]], ['killed']],
-  [[shoots[3]], ['killed', 'won']],
+  [[shoots[1]], ['wounded'], [null]],
+  [[shoots[2]], ['killed'], [[{ x: 2, y: 1 }, { x: 3, y: 1 }]]],
+  [[shoots[3]], ['killed', 'won'], [[{ x: 5, y: 1 }], null]],
 ];
 
 test('new game', () => {
@@ -93,9 +93,9 @@ test('handleEnemyShoot user off target, enemy won', () => {
   const expectRecord = [
     ['user', userShoot, 'offTarget'],
     ['enemy', shoots[1], 'wounded'],
-    ['enemy', shoots[2], 'killed'],
+    ['enemy', shoots[2], 'killed'], // last - ship's coords
     ['enemy', shoots[3], 'killed'],
-    ['enemy', null, 'won'],
+    ['enemy', null, 'won', _.cloneDeep(field)], // last - enemy's map
   ];
 
   expect(shootingResult).toEqual(expectRecord);
@@ -108,11 +108,16 @@ game3.setEnemy(enemy3);
 game3.setEnemyMap(_.cloneDeep(field));
 game3.setEnemyFlot(_.cloneDeep(flot));
 
-test.each(handleShootTestDataUserWon)('(handleShoot user won, %j, %j)', (userShoots, expectResults) => {
-  const shootResult = game3.handleUserShoot(_.head(userShoots));
-  const expectRecord = expectResults.map((result, index) => {
-    const coords = userShoots[index] ? userShoots[index] : null;
-    return ['user', coords, result];
-  });
-  expect(shootResult).toEqual(expectRecord);
-});
+test.each(handleShootTestDataUserWon)(
+  '(handleShoot user won, %j, %j)',
+  (userShoots, expectResults, additionalData) => {
+    const shootResult = game3.handleUserShoot(_.head(userShoots));
+    const expectRecord = expectResults.map((result, index) => {
+      const coords = userShoots[index] ? userShoots[index] : null;
+      return additionalData[index] === null
+        ? ['user', coords, result]
+        : ['user', coords, result, additionalData[index]];
+    });
+    expect(shootResult).toEqual(expectRecord);
+  },
+);
