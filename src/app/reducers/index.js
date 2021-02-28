@@ -29,7 +29,7 @@ const billboardReducer = (state = {}, action) => {
         case 'settingFlot':
           return 'info.setFlot';
         case 'battleIsOn':
-          switch (_.last(_.last(action.payload.records))) {
+          switch (_.last(action.payload.records)[2]) {
             case 'started':
               return `info.turn.${_.head(_.last(action.payload.records))}`;
             case 'wounded':
@@ -45,7 +45,7 @@ const billboardReducer = (state = {}, action) => {
           return state;
       }
     case 'SHOOT':
-      switch (_.last(_.last(action.payload.records))) {
+      switch (_.last(action.payload.records)[2]) {
         case 'started':
           return `info.turn.${_.head(_.last(action.payload.records))}`;
         case 'wounded':
