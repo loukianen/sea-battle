@@ -29,20 +29,20 @@ export default {
         user: 'The your turn',
       },
       wounded: {
-        enemy: 'The enemy hit your ship!',
-        user: "You hit enemy's ship!",
+        enemy: "The enemy hit your ship! The enemy's turn",
+        user: "You hit enemy's ship! The your turn",
       },
       killed: {
-        enemy: 'The enemy has sunk your ship!',
-        user: "You has sunk enemy's ship!",
+        enemy: "The enemy has sunk your ship! The enemy's turn",
+        user: "You has sunk enemy's ship! The your turn",
       },
       won: {
         enemy: 'The enemy won',
         user: 'You won!',
       },
       offTarget: {
-        enemy: 'The enemy missed the target',
-        user: 'You missed the target',
+        enemy: 'The enemy missed the target. The your turn',
+        user: "You missed the target. The enemy's turn",
       },
     },
     field: {

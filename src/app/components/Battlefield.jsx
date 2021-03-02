@@ -4,6 +4,7 @@ import i18next from 'i18next';
 import _ from 'lodash';
 import * as actions from '../actions/index';
 import { calcArea, isValidCoords } from '../bin/utils';
+// import game from '../bin/game';
 
 const isPutingPosible = (area, ship, field) => {
   const coords = [...area, ...ship];

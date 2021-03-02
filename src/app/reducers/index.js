@@ -32,22 +32,14 @@ const billboardReducer = (state = {}, action) => {
           switch (_.last(action.payload.records)[2]) {
             case 'started':
               return `info.turn.${_.head(_.last(action.payload.records))}`;
-            case 'wounded':
-              return `info.wounded.${_.head(_.last(action.payload.records))}`;
-            case 'killed':
-              return `info.killed.${_.head(_.last(action.payload.records))}`;
-            case 'won':
-              return `info.won.${_.head(_.last(action.payload.records))}`;
             default:
-              return `info.offTarget.${_.head(_.last(action.payload.records))}`;
+              return '';
           }
         default:
           return state;
       }
     case 'SHOOT':
       switch (_.last(action.payload.records)[2]) {
-        case 'started':
-          return `info.turn.${_.head(_.last(action.payload.records))}`;
         case 'wounded':
           return `info.wounded.${_.head(_.last(action.payload.records))}`;
         case 'killed':
@@ -133,7 +125,7 @@ const gameStateReducer = (state = '', action) => {
     case 'CHANGE_GAMESTATE':
       return action.payload.newGameState;
     case 'SHOOT':
-      if (_.last(_.last(action.payload.records)) === 'won') {
+      if (_.last(action.payload.records)[2] === 'won') {
         return 'finished';
       }
       return state;

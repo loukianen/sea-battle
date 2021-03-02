@@ -1,15 +1,45 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import i18next from 'i18next';
 import { letters } from '../bin/utils';
+import * as actions from '../actions/index';
 
 const mapStateToProps = (state) => {
-  const { language, log, score } = state;
-  const props = { language, log, score };
+  const {
+    activePlayer,
+    game,
+    gameState,
+    language,
+    log,
+    score
+  } = state;
+  const props = {
+    activePlayer,
+    game,
+    gameState,
+    language,
+    log,
+    score
+  };
   return props;
 };
 
+const actionCreators = {
+  getEnemyShoot: actions.getEnemyShoot,
+};
 const Log = (props) => {
+  useEffect(() => {
+    const {
+      activePlayer,
+      game,
+      gameState,
+      getEnemyShoot
+    } = props;
+    if (activePlayer === 'enemy' && gameState === 'battleIsOn') {
+      return getEnemyShoot({ game });
+    }
+  });
+
   const { log, score } = props;
   return (
     <div className="d-flex flex-column shipsfield text-center rounded">
@@ -47,6 +77,6 @@ const Log = (props) => {
       </table>
     </div>
   );
-};
+}
 
-export default connect(mapStateToProps)(Log);
+export default connect(mapStateToProps, actionCreators)(Log);

@@ -1,16 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
 import App from './components/App.jsx';
 import reducer from './reducers/index';
 import generateFieldData from './bin/genFieldData';
 import { getFieldSize } from './bin/utils';
 
 export default () => {
-  // eslint-disable no-underscore-dangle 
-  const ext = window.__REDUX_DEVTOOLS_EXTENSION__; // uncomment for plug in
-  const devtoolMiddleware = ext && ext(); // uncomment for plug in
+  // eslint-disable no-underscore-dangle
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   // eslint-enable
 
   const makeInitialState = () => {
@@ -45,7 +45,7 @@ export default () => {
   };
 
   // For plug in REDUX_DEVTOOLS edd third argument 'devtoolMiddleware' to 'createStore'
-  const store = createStore(reducer, makeInitialState(), devtoolMiddleware);
+  const store = createStore(reducer, makeInitialState(), composeEnhancers(applyMiddleware(thunk)));
 
   render(
     <Provider store={store}>

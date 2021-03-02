@@ -37,6 +37,13 @@ export const shoot = (data) => ({
   payload: data,
 });
 
+export const getEnemyShoot = ({ game }) => (dispatch) => {
+  const records = game.getEnemyShoot();
+  setTimeout(() => {
+    dispatch(shoot({ records, newGame: game }));
+  }, 1800);
+};
+
 export const showPutYourShips = () => ({
   type: 'SHOW_PUT_YOUR_SHIPS',
 });
