@@ -14,6 +14,11 @@ const actionCreators = {
 };
 
 class Language extends React.Component {
+  constructor(props) {
+    super(props);
+    this.title = document.querySelector('title');
+  }
+  
   changeLanguage = (e) => {
     e.preventDefault();
     const language = e.target.getAttribute('lang');
@@ -22,7 +27,15 @@ class Language extends React.Component {
     const { dispatch, setLanguage } = this.props;
     dispatch(setLanguage(language));
   }
-  
+
+  componentDidMount() {
+    this.title.textContent = i18next.t('ui.mainHeader');
+  }
+
+  componentDidUpdate() {
+    this.title.textContent = i18next.t('ui.mainHeader');
+  }
+
   render() {
     return(
       <li className="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">

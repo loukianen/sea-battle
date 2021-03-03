@@ -29,7 +29,7 @@ img {
 
 #centerField {
   justify-content: center;
-  max-width: 400 px;
+  flex: 0 0 360px;
 }
 
 .messagefield {
@@ -226,4 +226,16 @@ img {
   width: 25px;
   height: 20px;
   margin: 5px 0;
+}
+
+@media (min-width: 768px) {
+  #centerField {
+    flex: 0 1 360px;
+  }
+}
+
+@media (min-width: 992px) {
+  #centerField {
+    min-width: 240px;
+  }
 }
