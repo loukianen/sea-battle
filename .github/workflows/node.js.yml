@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+        node-version: [15.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -32,7 +32,7 @@ jobs:
       uses: paambaati/codeclimate-action@v2.6.0
       # Add Code Climate secret key
       env:
-        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        CC_TEST_REPORTER_ID: f6ca1489a5dda0e0f09b68cc9e590a4aa96b699e428460d8fc55af0b8acf5d38
       with:
         coverageCommand: npm test -- --coverage --coverageProvider=v8
         debug: true
