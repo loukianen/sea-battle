@@ -28,6 +28,8 @@ const getPointAreaMapping = {
 
 export const letters = [null, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
 
+export const initialGameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
+
 export const calcArea = (data, corners = 'with') => { // corners 'with' or 'without'
   const coords = _.isArray(data) ? data : [data];
   const pointsAreas = coords.map((point) => getPointAreaMapping[corners](point));
@@ -95,6 +97,10 @@ export const getFieldSize = (fieldSizeName) => {
   switch (fieldSizeName) {
     case 'ten':
       return 10;
+    case 'seven':
+      return 7;
+    case 'five':
+      return 5;
     case 'three':
       return 3;
     default:

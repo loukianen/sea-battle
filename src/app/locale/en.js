@@ -66,10 +66,14 @@ export default {
     optionsMenu: {
       fieldSize: 'Battle field size',
       ten: '10 x 10 cells',
+      seven: '7 x 7 cells',
+      five: '5 x 5 cells',
+      three: '3 x 3 cells',
       enemy: 'Enemy',
       ushakov: 'Ushakov',
       shipType: 'Ship type',
       line: 'Only line',
+      save: 'Save',
     },
     log: {
       started: 'started',

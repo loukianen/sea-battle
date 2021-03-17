@@ -12,6 +12,10 @@ img {
     vertical-align: middle;
   }
 
+span {
+  vertical-align: middle;
+}
+
 .img-box {
   align-items: center;
 }
@@ -49,7 +53,25 @@ img {
   overflow-y: auto;
 }
 
-.grid-11 {
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.grid-five {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+}
+
+.grid-seven {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.grid-ten {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
   grid-template-rows: repeat(11, 1fr);

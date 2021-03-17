@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import App from './components/App.jsx';
 import reducer from './reducers/index';
 import generateFieldData from './bin/genFieldData';
-import { getFieldSize } from './bin/utils';
+import { getFieldSize, initialGameOptions } from './bin/utils';
 
 export default () => {
   // eslint-disable no-underscore-dangle
@@ -14,7 +14,7 @@ export default () => {
   // eslint-enable
 
   const makeInitialState = () => {
-    const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
+    const gameOptions = initialGameOptions;
     const language = 'auto';
     const userField = generateFieldData(getFieldSize(gameOptions.fieldSize));
     const enemyField = generateFieldData(getFieldSize(gameOptions.fieldSize));
@@ -44,7 +44,7 @@ export default () => {
     };
   };
 
-  // For plug in REDUX_DEVTOOLS edd third argument 'devtoolMiddleware' to 'createStore'
+  // For plug in REDUX_DEVTOOLS edd third argument 'composeEnhancers' to 'createStore'
   const store = createStore(reducer, makeInitialState(), composeEnhancers(applyMiddleware(thunk)));
 
   render(

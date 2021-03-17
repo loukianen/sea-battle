@@ -15,7 +15,12 @@ const actionCreators = {
 };
 
 const inputData = [
-  { blockId: 'block1', type: 'item', header: 'fieldSize', values: ['ten'] },
+  {
+    blockId: 'block1',
+    type: 'item',
+    header: 'fieldSize',
+    values: ['ten', 'seven', 'five', 'three']
+  },
   { blockId: 'block2', type: 'divider' },
   { blockId: 'block3', type: 'item', header: 'enemy', values: ['ushakov'] },
   { blockId: 'block4', type: 'divider' },
@@ -23,25 +28,55 @@ const inputData = [
 ];
 
 class Options extends React.Component {
+  constructor(props) {
+    super(props);
+    this.fieldSize = props.gameOptions.fieldSize;
+    this.enemy = props.gameOptions.enemy;
+    this.shipType = props.gameOptions.shipType;
+  }
+
+  changeGameOptions = (e) => {
+    e.preventDefault();
+    const gameOptions = { fieldSize: this.fieldSize, enemy: this.enemy, shipType: this.shipType };
+    const { gameOptions: oldGameOptions, dispatch, setOptions } = this.props;
+    if (!_.isEqual(gameOptions, oldGameOptions)) {
+      dispatch(setOptions({ gameOptions }));
+    }
+  }
+
+  handleClick = (header, value) => () => {
+    this[header] = value;
+  }
+
+  renderOption(value, header) {
+    if (header === 'fieldSize') {
+      return this.fieldSize === value
+        ? <input className="form-check-input" type="radio" name={header} id={value} value={value} onClick={this.handleClick(header, value)} defaultChecked></input>
+        : <input className="form-check-input" type="radio" name={header} id={value} value={value} onClick={this.handleClick(header, value)}></input>
+    }
+    return <input className="form-check-input" type="radio" name={header} id={value} value={value} checked disabled></input>
+  }
+
   renderOptions() {
-    return inputData.map((item) => {
-      if (item.type === 'divider') {
-        return <div key={item.blockId} className="dropdown-item d-flex flex-row"></div>;
-      }
-      return (
-        <div key={item.blockId} className="dropdown-item d-flex flex-row">
-          <form>
-            <h6>{i18next.t(`optionsMenu.${item.header}`)}</h6>
+    return <form className="d-flex flex-column justify-content-end" onSubmit={this.changeGameOptions}>
+      {inputData.map((item) => {
+        if (item.type === 'divider') {
+          return <div key={item.blockId} className="dropdown-item"></div>;
+        }
+        return (
+          <div key={item.blockId} className="dropdown-item d-flex flex-column">
+            <h6 className="color-ship-border">{i18next.t(`optionsMenu.${item.header}`)}</h6>
             {item.values.map((value) => (
               <div key={_.uniqueId('param')} className="form-check">
-                <input className="form-check-input" type="radio" name={value} id={value} value={value} checked disabled></input>
-                <label className="form-check-label" htmlFor={value}>{i18next.t(`optionsMenu.${value}`)}</label>
+                {this.renderOption(value, item.header)}
+                <label className="form-check-label color-ship-border" htmlFor={value}>{i18next.t(`optionsMenu.${value}`)}</label>
               </div>
             ))}
-          </form>
-        </div>
-      );
-    });
+          </div>
+        );
+      })}
+      <button type="submit" className="btn btn-outline-info flex-grow-0 m-2">{i18next.t(`optionsMenu.save`)}</button>
+    </form>;
   }
 
   render() {

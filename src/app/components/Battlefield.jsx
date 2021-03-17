@@ -30,6 +30,7 @@ const mapStateToProps = (state) => {
     userField,
     userFlot,
     game,
+    gameOptions,
     gameState,
     enemyField,
     shipInMove,
@@ -41,6 +42,7 @@ const mapStateToProps = (state) => {
     userFlot,
     game,
     gameState,
+    gameOptions,
     enemyField,
     shipInMove,
   };
@@ -168,7 +170,11 @@ class Battlefield extends React.Component {
 
   renderHeaderCell(cell, cellValue) {
     const { id, style } = cell;
-    return (<div key={id} className={style}>{cellValue}</div>);
+    return (
+      <div key={id} className={`${style} d-flex justify-content-center align-items-center`}>
+        <div>{cellValue}</div>
+      </div>
+    );
   }
 
   renderEnemyFieldCell(cell, cellValue) {
@@ -177,7 +183,7 @@ class Battlefield extends React.Component {
     const handler = activePlayer === 'user'
       && gameState === 'battleIsOn' && style !== 'killed-ship'
       ? this.handleClick(coords) : null;
-    return (<div key={id} className={style} onClick={handler}>{cellValue}</div>);
+    return (<div key={id} className={`${style} d-flex justify-content-center align-items-center`} onClick={handler}>{cellValue}</div>);
   }
 
   renderUserFieldCell(cell, cellValue) {
@@ -185,7 +191,7 @@ class Battlefield extends React.Component {
     return (
       <div
         key={id}
-        className={style}
+        className={`${style} d-flex justify-content-center align-items-center`}
         onDragLeave={this.handlerDragLeave(coords)}
         onDragEnter={this.handlerDragEnter(coords)}
         onDrop={this.handlerDrop(coords)}
@@ -196,14 +202,14 @@ class Battlefield extends React.Component {
   }
 
   render() {
-    const { owner } = this.props;
+    const { owner, gameOptions: { fieldSize } } = this.props;
     const flotId = `${owner}Flot`;
     const fieldId = `${owner}Field`;
     const field = this.props[fieldId];
     return(
       <div className="field-container">
         <div className="text-center color-ship-border h3" id={flotId}>{i18next.t(`ui.${flotId}`)}</div>
-        <div className="col field rounded mb-3 grid-11" id={fieldId}>
+        <div className={`col field rounded mb-3 grid-${fieldSize}`} id={fieldId}>
           {_.flatten(field.map((line, lineIndex) => {
             return line.map((cell, cellIndex) => {
               const { value } = cell;

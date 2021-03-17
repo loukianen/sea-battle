@@ -8,11 +8,15 @@ const activePlayerReducer = (state = {}, action) => {
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       switch (action.payload.newGameState) {
+        case 'choosingSettings':
+          return 'none';
         case 'battleIsOn':
           return utils.getActivePlayer(action.payload.records);
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return 'none';
     case 'SHOOT':
       return utils.getActivePlayer(action.payload.records);
     default:
@@ -51,6 +55,8 @@ const billboardReducer = (state = {}, action) => {
       }
     case 'SHOW_PUT_YOUR_SHIPS':
       return 'info.putYourShips';
+    case 'SET_OPTIONS':
+      return 'info.makeSetting';
     default:
       return state;
   }
@@ -66,6 +72,8 @@ const enemyFieldReducer = (state = {}, action) => {
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return generateFieldData(utils.getFieldSize(action.payload.gameOptions.fieldSize));
     case 'SHOOT':
       return utils.markCells(action.payload.records, newState, 'user');
     default:
@@ -84,6 +92,8 @@ const flotReducer = (state = { ships: {}, shipIds: [] }, action) => {
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return { ships: {}, shipIds: [] };
     case 'TAKE_SHIP_OUT_DOCK':
       _.unset(state.ships, action.payload.getId());
       return {
@@ -111,6 +121,8 @@ const gameReducer = (state = {}, action) => {
         default:
           return action.payload.newGame;
       }
+    case 'SET_OPTIONS':
+      return null;
     case 'SHOOT':
       return action.payload.newGame;
     default:
@@ -118,12 +130,21 @@ const gameReducer = (state = {}, action) => {
   }
 };
 
-const gameOptionsReducer = (state = {}) => state;
+const gameOptionsReducer = (state = utils.initialGameOptions, action) => {
+  switch (action.type) {
+    case 'SET_OPTIONS':
+      return action.payload.gameOptions;
+    default:
+      return state;
+  }
+};
 
 const gameStateReducer = (state = '', action) => {
   switch (action.type) {
     case 'CHANGE_GAMESTATE':
       return action.payload.newGameState;
+    case 'SET_OPTIONS':
+      return 'choosingSettings';
     case 'SHOOT':
       if (_.last(action.payload.records)[2] === 'won') {
         return 'finished';
@@ -163,6 +184,8 @@ const logReducer = (state = {}, action) => {
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return [];
     case 'SHOOT':
       return addNewRecords(action.payload.records);
     default:
@@ -181,6 +204,8 @@ const scoreReducer = (state = {}, action) => {
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return 0;
     case 'SHOOT':
       return state + utils.getScore(action.payload.records);
     default:
@@ -197,6 +222,8 @@ const shipInMoveReducer = (state = null, action) => {
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return null;
     case 'TAKE_SHIP_OUT_DOCK':
       return action.payload;
     case 'PUT_SHIP_INTO_USER_DOCK':
@@ -220,6 +247,8 @@ const userFieldReducer = (state = [], action) => {
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return generateFieldData(utils.getFieldSize(action.payload.gameOptions.fieldSize));
     case 'CHANGE_CELLS':
       return utils.upGradeField(action.payload.coords, newState);
     case 'SET_DEFAULT_STYLE_FOR_CELLS':
@@ -244,6 +273,8 @@ const userFlotReducer = (state = { ships: {}, shipIds: [] }, action) => {
         default:
           return state;
       }
+    case 'SET_OPTIONS':
+      return { ships: {}, shipIds: [] };
     case 'PUT_SHIP_INTO_USER_DOCK':
       return {
         ships: { ...state.ships, [action.payload.ship.getId()]: action.payload.ship },

@@ -28,8 +28,9 @@ export const setLanguage = (lang) => ({
   payload: lang,
 });
 
-export const setOptions = () => ({
+export const setOptions = (data) => ({
   type: 'SET_OPTIONS',
+  payload: data,
 });
 
 export const shoot = (data) => ({

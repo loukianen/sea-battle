@@ -11,6 +11,18 @@ const flotMapping = {
     ['doubleDeck', DoubleDeckShip, 3],
     ['oneDeck', OneDeckShip, 4],
   ],
+  sevenline: [
+    ['fourDeck', FourDeckLineShip, 0],
+    ['threeDeck', ThreeDeckLineShip, 1],
+    ['doubleDeck', DoubleDeckShip, 2],
+    ['oneDeck', OneDeckShip, 3],
+  ],
+  fiveline: [
+    ['fourDeck', FourDeckLineShip, 0],
+    ['threeDeck', ThreeDeckLineShip, 0],
+    ['doubleDeck', DoubleDeckShip, 1],
+    ['oneDeck', OneDeckShip, 2],
+  ],
   threeline: [
     ['fourDeck', FourDeckLineShip, 0],
     ['threeDeck', ThreeDeckLineShip, 0],

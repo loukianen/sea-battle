@@ -66,10 +66,14 @@ export default {
     optionsMenu: {
       fieldSize: 'Размер поля',
       ten: '10 x 10 клеток',
+      seven: '7 x 7 клеток',
+      five: '5 x 5 клеток',
+      three: '3 x 3 клетки',
       enemy: 'Противник',
       ushakov: 'Ушаков',
       shipType: 'Тип кораблей',
       line: 'Только в линию',
+      save: 'Сохранить',
     },
     log: {
       started: 'начал',
