@@ -71,6 +71,7 @@ export default {
       three: '3 x 3 клетки',
       enemy: 'Противник',
       ushakov: 'Ушаков',
+      jackSparrow: 'Джек Воробей',
       shipType: 'Тип кораблей',
       line: 'Только в линию',
       save: 'Сохранить',

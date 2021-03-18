@@ -3,13 +3,15 @@ import Ushakov from '../src/app/bin/Ushakov';
 import getFieldData from '../src/app/bin/genFieldData';
 import makeFlot from '../src/app/bin/makeFlot';
 import * as utils from '../src/app/bin/utils';
+import JackSparrow from '../src/app/bin/JackSparrow';
 
 const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
 const newField = getFieldData();
 const newFlot = makeFlot(gameOptions);
 
-test('setting 10 ships on field 10x10 Ushakov', () => {
-  const ai = new Ushakov();
+const aisForCheckingSettingShipsAndFields = [new Ushakov(), new JackSparrow()];
+
+test.each(aisForCheckingSettingShipsAndFields)('setting 10 ships on field 10x10, %s', (ai) => {
   const { ships, shipIds, field } = ai.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
 
   const totalHealth = shipIds.reduce((acc, id) => acc + ships[id].getHealth(), 0);
@@ -18,23 +20,38 @@ test('setting 10 ships on field 10x10 Ushakov', () => {
   expect(totalHealth).toBe(20);
 });
 
-const aiForEmpty = new Ushakov();
-aiForEmpty.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
+const aisForEmpty = [new Ushakov(), new JackSparrow()];
+aisForEmpty.forEach((ai) => {
+  ai.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
+});
 const points = [1, 4, 7, 10];
 const hitShipResults = _.flatten(points.map((y) => points.map((x) => ({ x, y })))).slice(0, 15);
-const controlField = getFieldData();
+const controlFields = aisForEmpty.map(() => getFieldData());
 
 test.each(hitShipResults)('(shooting at empty cell, %j)', (shoot) => {
-  controlField[shoot.y][shoot.x].value = 'progibited';
-  const area = utils.calcArea(shoot).filter(
-    (item) => utils.isValidCoords(item, 0, controlField.length - 1),
-  );
-  area.forEach(({ x, y }) => {
-    controlField[y][x].value = 'progibited';
+  controlFields.map((item) => {
+    const field = item;
+    field[shoot.y][shoot.x].value = 'progibited';
+    return field;
   });
-  aiForEmpty.handleSootingResult({ coords: shoot, result: 'killed' });
-  const enemyShoot = aiForEmpty.shoot();
-  expect(controlField[enemyShoot.y][enemyShoot.x].value).toBeNull();
+  const areas = controlFields.map((field) => utils
+    .calcArea(shoot)
+    .filter((item) => utils.isValidCoords(item, 0, field.length - 1)));
+  areas.forEach((area, index) => {
+    area.forEach(({ x, y }) => {
+      const controlField = controlFields[index];
+      controlField[y][x].value = 'progibited';
+    });
+  });
+  aisForEmpty.forEach((ai) => {
+    ai.handleSootingResult({ coords: shoot, result: 'killed' });
+  });
+  const enemyShoots = aisForEmpty.map((ai) => ai.shoot());
+  controlFields.forEach((field, index) => {
+    const enemyShout = enemyShoots[index];
+    const { x: fieldX, y: fieldY } = enemyShout;
+    expect(field[fieldY][fieldX].value).toBeNull();
+  });
 });
 
 const aiForSinkShip = new Ushakov();

@@ -71,6 +71,7 @@ export default {
       three: '3 x 3 cells',
       enemy: 'Enemy',
       ushakov: 'Ushakov',
+      jackSparrow: 'Jack Sparrow',
       shipType: 'Ship type',
       line: 'Only line',
       save: 'Save',

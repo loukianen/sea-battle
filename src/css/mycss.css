@@ -250,6 +250,16 @@ span {
   margin: 5px 0;
 }
 
+.dropdown-item.active, .dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: var(--light);
+}
+
+.custom-radio .custom-control-input:disabled:checked ~ .custom-control-label::before {
+  background-color:var(--info);
+}
+
 @media (min-width: 768px) {
   #centerField {
     flex: 0 1 360px;

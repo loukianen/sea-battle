@@ -1,28 +1,10 @@
 import _ from 'lodash';
-import { calcArea, isValidCoords, getRandomElFromColl } from './utils';
-
-const trimField = (field) => field.slice(1).map((line) => line.slice(1));
-
-const getEmptyCells = (field) => {
-  let cells = {};
-  const cellIds = [];
-  const trimedField = trimField(field);
-  trimedField.forEach((line) => {
-    line.forEach((cell) => {
-      const { id, style } = cell;
-      if (style !== 'ship' && style !== 'ship-area') {
-        cells = { ...cells, [id]: cell };
-        cellIds.push(id);
-      }
-    });
-  });
-  return { cells, cellIds };
-};
+import * as utils from './utils'; // { calcArea, isValidCoords, getRandomElFromColl, getEmptyCells } from './utils';
 
 const isValidShipCoords = (field, shipCoords) => {
   const coords = _.isArray(shipCoords) ? shipCoords : [shipCoords];
   const maxValue = field.length - 1;
-  if (!isValidCoords(coords, 1, maxValue)) {
+  if (!utils.isValidCoords(coords, 1, maxValue)) {
     return false;
   }
   return coords.every(({ x, y }) => {
@@ -51,8 +33,8 @@ class Ushakov {
   shoot() {
     // first variant is a random shooting at all empty cells;
     if (_.isEmpty(this.enemyShipCoords)) {
-      const { cells, cellIds } = getEmptyCells(this.enemyField);
-      const cellId = getRandomElFromColl(cellIds);
+      const { cells, cellIds } = utils.getEmptyCells(this.enemyField);
+      const cellId = utils.getRandomElFromColl(cellIds);
       return cells[cellId].coords;
     }
     // second: we should shooting on ends of the ship (the ship has line config)
@@ -71,14 +53,14 @@ class Ushakov {
         { [mainLine]: _.last(lines[mainLine]) + 1, [slaveLine]: lines[slaveLine][0] },
       ];
       const validCoordsForShooting = getValidCoords(this.enemyField, coordsForShooting);
-      return getRandomElFromColl(validCoordsForShooting);
+      return utils.getRandomElFromColl(validCoordsForShooting);
     }
     // last variant - random shooting at possible coordinates.
     // 'Without' - means without corners in shipArea
     // 'shipArea' - cells around the ship
-    const coords = calcArea(this.enemyShipCoords[0], 'without');
+    const coords = utils.calcArea(this.enemyShipCoords[0], 'without');
     const validCoords = getValidCoords(this.enemyField, coords);
-    return getRandomElFromColl(validCoords);
+    return utils.getRandomElFromColl(validCoords);
   }
 
   handleSootingResult({ coords, result }) {
@@ -93,8 +75,8 @@ class Ushakov {
       killed: ({ x, y }) => {
         this.enemyField[y][x].style = 'ship';
         this.enemyShipCoords.push({ x, y });
-        const area = calcArea(this.enemyShipCoords)
-          .filter((item) => isValidCoords(item, 1, this.enemyField.length - 1));
+        const area = utils.calcArea(this.enemyShipCoords)
+          .filter((item) => utils.isValidCoords(item, 1, this.enemyField.length - 1));
         area.forEach(({ x: gor, y: vert }) => {
           this.enemyField[vert][gor].style = 'ship-area';
         });
@@ -120,11 +102,11 @@ class Ushakov {
     const { ships, shipIds } = { ...flot };
     shipIds.forEach((shipId) => {
       const iter = () => {
-        const orientation = getRandomElFromColl(['east', 'north']);
+        const orientation = utils.getRandomElFromColl(['east', 'north']);
         const ship = ships[shipId];
-        const { cells, cellIds } = getEmptyCells(field);
+        const { cells, cellIds } = utils.getEmptyCells(field);
         ship.setOrientation(orientation);
-        const mainPoint = cells[getRandomElFromColl(cellIds)].coords;
+        const mainPoint = cells[utils.getRandomElFromColl(cellIds)].coords;
         ship.setCoords(mainPoint);
         const shipCoords = ship.getCoords(mainPoint);
         const areaCoords = ship.getArea(mainPoint);
@@ -136,7 +118,7 @@ class Ushakov {
         field[y][x].shipId = shipId;
       });
       areaCoords
-        .filter((item) => isValidCoords(item, 1, field.length - 1))
+        .filter((item) => utils.isValidCoords(item, 1, field.length - 1))
         .forEach(({ x, y }) => {
           field[y][x].style = 'ship-area';
         });

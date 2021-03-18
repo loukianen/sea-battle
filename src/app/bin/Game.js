@@ -2,10 +2,13 @@ import _ from 'lodash';
 import generateFieldData from './genFieldData';
 import makeFlot from './makeFlot';
 import { getFieldSize, getRandomElFromColl } from './utils';
+import JackSparrow from './JackSparrow';
 import Ushakov from './Ushakov';
 
 const getEnemy = (enemyName) => {
   switch (enemyName) {
+    case 'jackSparrow':
+      return new JackSparrow();
     case 'ushakov':
       return new Ushakov();
     default:

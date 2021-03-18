@@ -22,7 +22,7 @@ const inputData = [
     values: ['ten', 'seven', 'five', 'three']
   },
   { blockId: 'block2', type: 'divider' },
-  { blockId: 'block3', type: 'item', header: 'enemy', values: ['ushakov'] },
+  { blockId: 'block3', type: 'item', header: 'enemy', values: ['jackSparrow', 'ushakov'] },
   { blockId: 'block4', type: 'divider' },
   { blockId: 'block5', type: 'item', header: 'shipType', values: ['line'] },
 ];
@@ -49,8 +49,8 @@ class Options extends React.Component {
   }
 
   renderOption(value, header) {
-    if (header === 'fieldSize') {
-      return this.fieldSize === value
+    if (header !== 'shipType') {
+      return this[header] === value
         ? <input className="form-check-input" type="radio" name={header} id={value} value={value} onClick={this.handleClick(header, value)} defaultChecked></input>
         : <input className="form-check-input" type="radio" name={header} id={value} value={value} onClick={this.handleClick(header, value)}></input>
     }
@@ -61,7 +61,7 @@ class Options extends React.Component {
     return <form className="d-flex flex-column justify-content-end" onSubmit={this.changeGameOptions}>
       {inputData.map((item) => {
         if (item.type === 'divider') {
-          return <div key={item.blockId} className="dropdown-item"></div>;
+          return <div key={item.blockId} className="dropdown-divider"></div>;
         }
         return (
           <div key={item.blockId} className="dropdown-item d-flex flex-column">

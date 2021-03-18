@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import generateFieldData from '../src/app/bin/genFieldData';
 import Game from '../src/app/bin/Game';
+import JackSparrow from '../src/app/bin/JackSparrow';
 import Ushakov from '../src/app/bin/Ushakov';
 import OneDeckShip from '../src/app/ships/OneDeckShip';
 import DoubleDeckShip from '../src/app/ships/DoubleDeckShip';
@@ -32,6 +33,7 @@ const makeDataForTest = () => {
 };
 
 const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
+const jacksGameOptions = { fieldSize: 'ten', enemy: 'jackSparrow', shipType: 'line' };
 
 const { shoots, flot, field } = makeDataForTest();
 
@@ -44,7 +46,9 @@ const expectedRecords = [
 
 test('new game', () => {
   const game = new Game(gameOptions);
+  const jacksGame = new Game(jacksGameOptions);
 
+  expect(jacksGame.enemy).toBeInstanceOf(JackSparrow);
   expect(game.enemy).toBeInstanceOf(Ushakov);
   expect(game.enemyFlot.shipIds.length).toBe(10);
   expect(Object.keys(game.enemyFlot.ships).length).toBe(10);

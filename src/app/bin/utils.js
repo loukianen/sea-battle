@@ -88,6 +88,24 @@ export const getActivePlayer = (records) => {
   return activePlayer;
 };
 
+const trimField = (field) => field.slice(1).map((line) => line.slice(1));
+
+export const getEmptyCells = (field) => {
+  let cells = {};
+  const cellIds = [];
+  const trimedField = trimField(field);
+  trimedField.forEach((line) => {
+    line.forEach((cell) => {
+      const { id, style } = cell;
+      if (style !== 'ship' && style !== 'ship-area') {
+        cells = { ...cells, [id]: cell };
+        cellIds.push(id);
+      }
+    });
+  });
+  return { cells, cellIds };
+};
+
 export const getRandomElFromColl = (arr) => {
   const index = Math.round(Math.random() * (arr.length - 1));
   return arr[index];
