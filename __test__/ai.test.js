@@ -61,7 +61,7 @@ const emptyFieldCoords = _.flatten(
 );
 const shipCoords = [{ x: 5, y: 4 }, { x: 5, y: 5 }, { x: 5, y: 6 }];
 const shipArea = utils.calcArea(shipCoords);
-const fildCoordsButSipAndArea = _.difference(emptyFieldCoords, [...shipCoords, ...shipArea]);
+const fieldCoordsButShipAndArea = _.difference(emptyFieldCoords, [...shipCoords, ...shipArea]);
 const dataForSinkShip = [
   [
     { coords: { x: 5, y: 5 }, result: 'wounded' },
@@ -73,11 +73,36 @@ const dataForSinkShip = [
   ],
   [{ coords: { x: 5, y: 6 }, result: 'wounded' }, [{ x: 5, y: 4 }, { x: 5, y: 7 }]],
   [{ coords: { x: 5, y: 7 }, result: 'offTarget' }, [{ x: 5, y: 4 }]],
-  [{ coords: { x: 5, y: 4 }, result: 'killed' }, fildCoordsButSipAndArea],
+  [{ coords: { x: 5, y: 4 }, result: 'killed' }, fieldCoordsButShipAndArea],
 ];
 
 test.each(dataForSinkShip)('(sinking of a wounded ship, %j)', (shootingResult, possibleShoots) => {
   aiForSinkShip.handleSootingResult(shootingResult);
   const enemyShoot = aiForSinkShip.shoot();
   expect(possibleShoots).toContainEqual(enemyShoot);
+});
+
+test('handling shooting by Jack', () => {
+  const ai = new JackSparrow();
+  const field = _.cloneDeep(newField);
+  ai.setEnemyField(field);
+
+  const firstShootResult = { coords: { x: 2, y: 1 }, result: 'wounded' };
+  ai.handleSootingResult(firstShootResult);
+  const fieldAfterFirstShoot = ai.getEnemyField();
+  expect(fieldAfterFirstShoot[1][2].style).toBe('ship');
+  expect(fieldAfterFirstShoot[2][1].style).toBe('ship-area');
+  expect(fieldAfterFirstShoot[2][3].style).toBe('ship-area');
+
+  const secondShootResult = { coords: { x: 3, y: 1 }, result: 'killed' };
+  ai.handleSootingResult(secondShootResult);
+  const fieldAfterSecondShoot = ai.getEnemyField();
+  expect(fieldAfterSecondShoot[1][2].style).toBe('ship');
+  expect(fieldAfterSecondShoot[1][3].style).toBe('ship');
+  const area = utils
+    .calcArea([{ x: 2, y: 1 }, { x: 3, y: 1 }])
+    .filter((item) => utils.isValidCoords(item, 1, 10));
+  const isStyleAllCellsShipArea = area
+    .every(({ x, y }) => fieldAfterSecondShoot[y][x].style === 'ship-area');
+  expect(isStyleAllCellsShipArea).toBeTruthy();
 });

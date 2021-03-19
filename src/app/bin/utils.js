@@ -24,13 +24,18 @@ const getPointAreaMapping = {
     res.push({ x, y: y + 1 });
     return res;
   },
+  corners: (coords) => {
+    const withCorners = getPointAreaMapping.with(coords);
+    const withoutCorners = getPointAreaMapping.without(coords);
+    return _.differenceWith(withCorners, withoutCorners, _.isEqual);
+  },
 };
 
 export const letters = [null, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
 
 export const initialGameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
 
-export const calcArea = (data, corners = 'with') => { // corners 'with' or 'without'
+export const calcArea = (data, corners = 'with') => { // corners 'with', 'without' or 'corners'
   const coords = _.isArray(data) ? data : [data];
   const pointsAreas = coords.map((point) => getPointAreaMapping[corners](point));
   const areaWithShipCoords = _.uniqWith(_.flatten(pointsAreas), _.isEqual);

@@ -2,21 +2,23 @@ import _ from 'lodash';
 import Ushakov from './Ushakov';
 import * as utils from './utils';
 
+const includesObject = (arr, value) => !arr.every((item) => !_.isEqual(item, value));
+
 class JackSparrow extends Ushakov {
   addKilledShipCoords(shoot) {
     const shipCoords = [];
     const iter = (coords) => {
-      if (!_.includes(shipCoords, coords)) {
+      if (!includesObject(shipCoords, coords)) {
         shipCoords.push(coords);
+        const cellsForCheck = utils.calcArea(coords, 'without');
+        cellsForCheck.forEach(({ x, y }) => {
+          if (this.enemyField[y]
+            && this.enemyField[y][x]
+            && this.enemyField[y][x].style === 'ship') {
+            iter({ x, y });
+          }
+        });
       }
-      const cellsForCheck = utils
-        .calcArea(coords, 'without')
-        .filter((cell) => utils.isValidCoords(cell));
-      cellsForCheck.forEach(({ x, y }) => {
-        if (this.enemyField[y][x].style === 'ship') {
-          iter({ x, y });
-        }
-      });
     };
     iter(shoot);
     this.enemyShipCoords = shipCoords;
@@ -35,6 +37,12 @@ class JackSparrow extends Ushakov {
       },
       wounded: ({ x, y }) => {
         this.enemyField[y][x].style = 'ship';
+        const corners = utils
+          .calcArea({ x, y }, 'corners')
+          .filter((item) => utils.isValidCoords(item, 1, this.enemyField.length - 1));
+        corners.forEach(({ x: gor, y: vert }) => {
+          this.enemyField[vert][gor].style = 'ship-area';
+        });
       },
       killed: ({ x, y }) => {
         this.enemyField[y][x].style = 'ship';
