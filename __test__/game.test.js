@@ -3,6 +3,7 @@ import generateFieldData from '../src/app/bin/genFieldData';
 import Game from '../src/app/bin/Game';
 import JackSparrow from '../src/app/bin/JackSparrow';
 import Ushakov from '../src/app/bin/Ushakov';
+import Nahimov from '../src/app/bin/Nahimov';
 import OneDeckShip from '../src/app/ships/OneDeckShip';
 import DoubleDeckShip from '../src/app/ships/DoubleDeckShip';
 import FakeEnemyForGetShoot from '../__fixtures__/FakeEnemyForGetShoot';
@@ -34,6 +35,7 @@ const makeDataForTest = () => {
 
 const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
 const jacksGameOptions = { fieldSize: 'ten', enemy: 'jackSparrow', shipType: 'line' };
+const nahimovGameOptions = { fieldSize: 'ten', enemy: 'nahimov', shipType: 'line' };
 
 const { shoots, flot, field } = makeDataForTest();
 
@@ -47,7 +49,9 @@ const expectedRecords = [
 test('new game', () => {
   const game = new Game(gameOptions);
   const jacksGame = new Game(jacksGameOptions);
+  const nahimovGame = new Game(nahimovGameOptions);
 
+  expect(nahimovGame.enemy).toBeInstanceOf(Nahimov);
   expect(jacksGame.enemy).toBeInstanceOf(JackSparrow);
   expect(game.enemy).toBeInstanceOf(Ushakov);
   expect(game.enemyFlot.shipIds.length).toBe(10);

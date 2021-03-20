@@ -22,7 +22,12 @@ const inputData = [
     values: ['ten', 'seven', 'five', 'three']
   },
   { blockId: 'block2', type: 'divider' },
-  { blockId: 'block3', type: 'item', header: 'enemy', values: ['jackSparrow', 'ushakov'] },
+  {
+    blockId: 'block3',
+    type: 'item',
+    header: 'enemy',
+    values: ['jackSparrow', 'ushakov', 'nahimov'],
+  },
   { blockId: 'block4', type: 'divider' },
   { blockId: 'block5', type: 'item', header: 'shipType', values: ['line'] },
 ];

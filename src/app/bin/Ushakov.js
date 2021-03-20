@@ -1,20 +1,8 @@
 import _ from 'lodash';
 import * as utils from './utils'; // { calcArea, isValidCoords, getRandomElFromColl, getEmptyCells } from './utils';
 
-const isValidShipCoords = (field, shipCoords) => {
-  const coords = _.isArray(shipCoords) ? shipCoords : [shipCoords];
-  const maxValue = field.length - 1;
-  if (!utils.isValidCoords(coords, 1, maxValue)) {
-    return false;
-  }
-  return coords.every(({ x, y }) => {
-    const cellStyle = field[y][x].style;
-    return (cellStyle !== 'ship' && cellStyle !== 'ship-area');
-  });
-};
-
 const getValidCoords = (field, coords) => coords
-  .filter((item) => isValidShipCoords(field, item));
+  .filter((item) => utils.isValidShipCoords(field, item));
 
 class Ushakov {
   constructor() {
@@ -110,7 +98,7 @@ class Ushakov {
         ship.setCoords(mainPoint);
         const shipCoords = ship.getCoords(mainPoint);
         const areaCoords = ship.getArea(mainPoint);
-        return isValidShipCoords(field, shipCoords) ? { shipCoords, areaCoords } : iter();
+        return utils.isValidShipCoords(field, shipCoords) ? { shipCoords, areaCoords } : iter();
       };
       const { shipCoords, areaCoords } = iter();
       shipCoords.forEach(({ x, y }) => {

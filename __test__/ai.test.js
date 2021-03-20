@@ -1,15 +1,16 @@
 import _ from 'lodash';
 import Ushakov from '../src/app/bin/Ushakov';
+import JackSparrow from '../src/app/bin/JackSparrow';
+import Nahimov from '../src/app/bin/Nahimov';
 import getFieldData from '../src/app/bin/genFieldData';
 import makeFlot from '../src/app/bin/makeFlot';
 import * as utils from '../src/app/bin/utils';
-import JackSparrow from '../src/app/bin/JackSparrow';
 
 const gameOptions = { fieldSize: 'ten', enemy: 'ushakov', shipType: 'line' };
 const newField = getFieldData();
 const newFlot = makeFlot(gameOptions);
 
-const aisForCheckingSettingShipsAndFields = [new Ushakov(), new JackSparrow()];
+const aisForCheckingSettingShipsAndFields = [new Ushakov(), new JackSparrow(), new Nahimov()];
 
 test.each(aisForCheckingSettingShipsAndFields)('setting 10 ships on field 10x10, %s', (ai) => {
   const { ships, shipIds, field } = ai.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
@@ -20,10 +21,11 @@ test.each(aisForCheckingSettingShipsAndFields)('setting 10 ships on field 10x10,
   expect(totalHealth).toBe(20);
 });
 
-const aisForEmpty = [new Ushakov(), new JackSparrow()];
+const aisForEmpty = [new Ushakov(), new JackSparrow(), new Nahimov()];
 aisForEmpty.forEach((ai) => {
   ai.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
 });
+aisForEmpty[2].setEnemyShipsAmount([0, 0, 0, 0]); // prevent specShoot() of Nahimov
 const points = [1, 4, 7, 10];
 const hitShipResults = _.flatten(points.map((y) => points.map((x) => ({ x, y })))).slice(0, 15);
 const controlFields = aisForEmpty.map(() => getFieldData());
@@ -48,8 +50,8 @@ test.each(hitShipResults)('(shooting at empty cell, %j)', (shoot) => {
   });
   const enemyShoots = aisForEmpty.map((ai) => ai.shoot());
   controlFields.forEach((field, index) => {
-    const enemyShout = enemyShoots[index];
-    const { x: fieldX, y: fieldY } = enemyShout;
+    const enemyShoot = enemyShoots[index];
+    const { x: fieldX, y: fieldY } = enemyShoot;
     expect(field[fieldY][fieldX].value).toBeNull();
   });
 });
@@ -105,4 +107,46 @@ test('handling shooting by Jack', () => {
   const isStyleAllCellsShipArea = area
     .every(({ x, y }) => fieldAfterSecondShoot[y][x].style === 'ship-area');
   expect(isStyleAllCellsShipArea).toBeTruthy();
+});
+
+test('Nahimov make enemyFlot', () => {
+  const ai = new Nahimov();
+  ai.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
+  const shipsAmount = ai.getEnemyShipsAmount();
+  shipsAmount.forEach((amount, index) => {
+    expect(amount).toBe(index + 1);
+  });
+});
+
+const nahimovForSpecHand = new Nahimov();
+nahimovForSpecHand.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
+const shootsResults = [
+  [[{ coords: { x: 1, y: 1 }, result: 'killed' }], [1, 2, 3, 3]],
+  [
+    [{ coords: { x: 3, y: 1 }, result: 'wounded' }, { coords: { x: 4, y: 1 }, result: 'killed' }],
+    [1, 2, 2, 3],
+  ],
+];
+
+test.each(shootsResults)('Nahimov special hendling shoots result, %j, %j', (shootsRes, expectedAmount) => {
+  shootsRes.forEach((result) => nahimovForSpecHand.handleSootingResult(result));
+  expect(nahimovForSpecHand.getEnemyShipsAmount()).toEqual(expectedAmount);
+});
+
+const clearCellIds = [306, 406, 506, 606, 706, 806, 906, 603, 604, 605, 607, 608, 609];
+const fieldForNahimovSpecShooting = _.cloneDeep(newField).map((line) => line.map((cell) => {
+  if (clearCellIds.includes(cell.id)) {
+    return cell;
+  }
+  const newCell = { ...cell };
+  newCell.style = 'ship-area';
+  return newCell;
+}));
+
+test('Nahimov special shooting', () => {
+  const ai = new Nahimov();
+  ai.setFlot(_.cloneDeep(newField), _.cloneDeep(newFlot));
+  ai.setEnemyField(fieldForNahimovSpecShooting);
+  const shoot = ai.shoot();
+  expect(shoot).toEqual({ x: 5, y: 6 });
 });

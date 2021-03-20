@@ -44,13 +44,24 @@ export const calcArea = (data, corners = 'with') => { // corners 'with', 'withou
 };
 
 export const isValidCoords = (coords, minValue, maxValue) => { // coords [{}, {}] or {}
-  // console.log(coords, minValue, maxValue);
   if (_.isEmpty(coords)) {
     return false;
   }
   const coordsList = _.isArray(coords) ? coords : [coords];
   return coordsList
     .every(({ x, y }) => (x >= minValue && x <= maxValue && y >= minValue && y <= maxValue));
+};
+
+export const isValidShipCoords = (field, shipCoords) => {
+  const coords = _.isArray(shipCoords) ? shipCoords : [shipCoords];
+  const maxValue = field.length - 1;
+  if (!isValidCoords(coords, 1, maxValue)) {
+    return false;
+  }
+  return coords.every(({ x, y }) => {
+    const cellStyle = field[y][x].style;
+    return (cellStyle !== 'ship' && cellStyle !== 'ship-area');
+  });
 };
 
 export const isValidField = (battleField) => {

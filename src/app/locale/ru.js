@@ -72,6 +72,7 @@ export default {
       enemy: 'Противник',
       ushakov: 'Ушаков',
       jackSparrow: 'Джек Воробей',
+      nahimov: 'Нахимов',
       shipType: 'Тип кораблей',
       line: 'Только в линию',
       save: 'Сохранить',

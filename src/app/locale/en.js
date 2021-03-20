@@ -72,6 +72,7 @@ export default {
       enemy: 'Enemy',
       ushakov: 'Ushakov',
       jackSparrow: 'Jack Sparrow',
+      nahimov: 'Nahimov',
       shipType: 'Ship type',
       line: 'Only line',
       save: 'Save',

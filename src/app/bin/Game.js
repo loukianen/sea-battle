@@ -4,6 +4,7 @@ import makeFlot from './makeFlot';
 import { getFieldSize, getRandomElFromColl } from './utils';
 import JackSparrow from './JackSparrow';
 import Ushakov from './Ushakov';
+import Nahimov from './Nahimov';
 
 const getEnemy = (enemyName) => {
   switch (enemyName) {
@@ -11,6 +12,8 @@ const getEnemy = (enemyName) => {
       return new JackSparrow();
     case 'ushakov':
       return new Ushakov();
+    case 'nahimov':
+      return new Nahimov();
     default:
       throw new Error('Unknown enemy name');
   }
