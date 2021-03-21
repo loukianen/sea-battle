@@ -150,3 +150,71 @@ test('Nahimov special shooting', () => {
   const shoot = ai.shoot();
   expect(shoot).toEqual({ x: 5, y: 6 });
 });
+
+const shootOffTargetResults = Array(10).fill({ coords: { x: 1, y: 1 }, result: 'offTarget' });
+const gameOptionsForTestSwitch = [
+  { fieldSize: 'three', enemy: 'nahimov', shipType: 'line' },
+  { fieldSize: 'five', enemy: 'nahimov', shipType: 'line' },
+  { fieldSize: 'seven', enemy: 'nahimov', shipType: 'line' },
+  { fieldSize: 'ten', enemy: 'nahimov', shipType: 'line' },
+];
+const dataForTestSwitch = gameOptionsForTestSwitch.map((item) => {
+  const fieldSize = utils.getFieldSize(item.fieldSize);
+  const field = getFieldData(fieldSize);
+  const flot = makeFlot(item);
+  const theEdgeAreaCellIds = utils.getTheEdgeAreaCellIds(fieldSize);
+  return [field, flot, theEdgeAreaCellIds];
+});
+
+test.each(dataForTestSwitch)('Nahimov switch to workAtTheEdge mode', (field, flot) => {
+  const ai = new Nahimov();
+  ai.setFlot(field, flot);
+  expect(ai.mode).toBe('beginning');
+  const controlShootOffTargetAmount = field.length - 1;
+  shootOffTargetResults
+    .slice(0, controlShootOffTargetAmount)
+    .forEach((res) => ai.handleSootingResult(res));
+  expect(ai.mode).toBe('workAtTheEdge');
+  expect(ai.targetOffCount).toBe(0);
+});
+
+test.each(dataForTestSwitch)('Nahimov to standart mode by offTarget', (field, flot, edgeArea) => {
+  const ai = new Nahimov();
+  ai.setFlot(field, flot);
+  ai.setMode('workAtTheEdge');
+  expect(ai.mode).toBe('workAtTheEdge');
+  expect(ai.targetOffCount).toBe(0);
+  const controlShootOffTargetAmount = field.length - 1;
+  shootOffTargetResults.slice(0, controlShootOffTargetAmount).forEach(() => {
+    const { x, y } = ai.shoot();
+    const shootedCellId = field[y][x].id;
+    expect(edgeArea).toContain(shootedCellId);
+    ai.handleSootingResult({ coords: { x, y }, result: 'offTarget' });
+  });
+  expect(ai.mode).toBe('standart');
+  expect(ai.targetOffCount).toBe(controlShootOffTargetAmount);
+});
+
+test.each(dataForTestSwitch)('Nahimov to standart mode by no space', (field, flot, edgeArea) => {
+  const fieldWithShootedEdgeArea = _.cloneDeep(field);
+  const { cells, cellIds } = utils.getEmptyCells(field);
+  const cellIdsExceptEdgeArea = _.difference(cellIds, edgeArea);
+  edgeArea.forEach((id) => {
+    const { x, y } = cells[id].coords;
+    fieldWithShootedEdgeArea[y][x].style = 'ship-area';
+  });
+  const ai = new Nahimov();
+  ai.setFlot(field, flot);
+  ai.setEnemyField(fieldWithShootedEdgeArea);
+  ai.setMode('workAtTheEdge');
+  expect(ai.mode).toBe('workAtTheEdge');
+  expect(ai.targetOffCount).toBe(0);
+  const shoot = ai.shoot();
+  const shootedCellId = field[shoot.y][shoot.x].id;
+  if (field.length > 3) {
+    expect(cellIdsExceptEdgeArea).toContain(shootedCellId);
+    expect(ai.mode).toBe('standart');
+  } else {
+    expect(cellIdsExceptEdgeArea).toContain(cellIds);
+  }
+});

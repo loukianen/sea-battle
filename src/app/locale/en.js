@@ -20,8 +20,8 @@ export default {
       cancel: 'Cancel',
     },
     info: {
-      makeSetting: 'Click "Start game" if you ready',
-      setFlot: 'Arrange the ships so that they do not touch each other. Double click to rotate the ship',
+      makeSetting: 'Set options and push "Start game" if you ready',
+      setFlot: 'Arrange the ships so that they do not touch each other. Double click to rotate the ship. When push "Start battle"',
       killEnemy: 'Good luck!',
       putYourShips: 'You must finish arrangement your ships before starting the battle',
       turn: {

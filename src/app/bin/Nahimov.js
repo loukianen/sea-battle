@@ -1,4 +1,4 @@
-// import _ from 'lodash';
+import _ from 'lodash';
 import Ushakov from './Ushakov';
 import DoubleDeckShip from '../ships/DoubleDeckShip';
 import ThreeDeckShip from '../ships/ThreeDeckLineShip';
@@ -31,6 +31,9 @@ class Nahimov extends Ushakov {
   constructor() {
     super();
     this.enemyShipsAmount = [0, 0, 0, 0];
+    this.isGotHit = false;
+    this.mode = null; // beginning, workAtTheEdge, standart
+    this.targetOffCount = 0;
     this.doubleDeckShip = new DoubleDeckShip();
     this.threeDeckShip = new ThreeDeckShip();
     this.fourDeckShip = new FourDeckShip();
@@ -40,16 +43,24 @@ class Nahimov extends Ushakov {
     if (result === 'killed') {
       const index = (this.enemyShipsAmount.length - 1) - this.enemyShipCoords.length;
       this.enemyShipsAmount[index] -= 1;
+      this.isGotHit = true;
+    }
+    if (result === 'wounded') {
+      this.isGotHit = true;
+    }
+    if (result === 'offTarget') {
+      this.targetOffCount += 1;
+      if (this.mode === 'beginning'
+        && this.targetOffCount === this.enemyField.length - 1
+        && !this.isGotHit) {
+        this.mode = 'workAtTheEdge';
+        this.targetOffCount = 0;
+      }
+      if (this.mode === 'workAtTheEdge' && this.targetOffCount === this.enemyField.length - 1) {
+        this.mode = 'standart';
+      }
     }
     return Ushakov.prototype.handleSootingResult.call(this, { coords, result });
-  }
-
-  isHaveToMakeSpecShoot() {
-    return this.enemyShipCoords.length === 0 && (
-      this.enemyShipsAmount[0] > 0
-      || this.enemyShipsAmount[1] > 0
-      || this.enemyShipsAmount[2] > 0
-    );
   }
 
   getEnemyShipsAmount() {
@@ -79,7 +90,7 @@ class Nahimov extends Ushakov {
     });
     const mostCommonIds = getMostCommonValues(idsFromCoords);
     const idForShoot = utils.getRandomElFromColl(mostCommonIds);
-    return cells[idForShoot].coords;
+    return idForShoot ? cells[idForShoot].coords : {};
   }
 
   setFlot(battleField, flot) {
@@ -102,15 +113,47 @@ class Nahimov extends Ushakov {
           throw new Error('Unknown ship class');
       }
     });
+    this.mode = 'beginning';
     return Ushakov.prototype.setFlot.call(this, battleField, flot);
   }
 
-  shoot() {
-    return this.isHaveToMakeSpecShoot() ? this.specShoot() : Ushakov.prototype.shoot.call(this);
+  setMode(mode) {
+    this.mode = mode;
   }
 
-  specShoot() {
+  shootAtTheEdge({ cells, cellIds }) {
+    const theEdgeAreaCellIds = utils.getTheEdgeAreaCellIds(this.enemyField.length - 1);
+    const cellsIdsForCheck = _.intersection(cellIds, theEdgeAreaCellIds);
+    if (cellsIdsForCheck.length <= 1) {
+      this.mode = 'standart';
+    }
+    if (_.isEmpty(cellsIdsForCheck)) {
+      return Ushakov.prototype.shoot.call(this);
+    }
+    const edgeCells = { cells, cellIds: cellsIdsForCheck };
+    const shootAtFourDeckShip = this.makeShoot(this.fourDeckShip, edgeCells);
+    if (!_.isEmpty(shootAtFourDeckShip)) {
+      return shootAtFourDeckShip;
+    }
+    const shootAtThreeDeckShip = this.makeShoot(this.threeDeckShip, edgeCells);
+    if (!_.isEmpty(shootAtThreeDeckShip)) {
+      return shootAtThreeDeckShip;
+    }
+    const shootAtDoubleDeckShip = this.makeShoot(this.doubleDeckShip, edgeCells);
+    if (!_.isEmpty(shootAtDoubleDeckShip)) {
+      return shootAtDoubleDeckShip;
+    }
+    return cells[utils.getRandomElFromColl(cellsIdsForCheck)].coords;
+  }
+
+  shoot() {
+    if (this.enemyShipCoords.length > 0) {
+      return Ushakov.prototype.shoot.call(this);
+    }
     const emptyCells = utils.getEmptyCells(this.getEnemyField());
+    if (this.mode === 'workAtTheEdge') {
+      return this.shootAtTheEdge(emptyCells);
+    }
     if (this.enemyShipsAmount[0] > 0) {
       return this.makeShoot(this.fourDeckShip, emptyCells);
     }
@@ -120,7 +163,8 @@ class Nahimov extends Ushakov {
     if (this.enemyShipsAmount[2] > 0) {
       return this.makeShoot(this.doubleDeckShip, emptyCells);
     }
-    throw new Error("specShoot haven't been called");
+    this.mode = 'standart';
+    return Ushakov.prototype.shoot.call(this);
   }
 }
 

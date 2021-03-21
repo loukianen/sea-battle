@@ -127,6 +127,16 @@ export const getRandomElFromColl = (arr) => {
   return arr[index];
 };
 
+export const getTheEdgeAreaCellIds = (fieldSize) => {
+  const firstLineIds = Array(fieldSize).fill(100).map((id, index) => id + 2 + index);
+  const leftLineIds = Array(fieldSize - 2).fill(202).map((id, index) => id + (100 * index));
+  const rightLineIds = Array(fieldSize - 2)
+    .fill(201 + fieldSize).map((id, index) => id + (100 * index));
+  const lastLineIds = Array(fieldSize).fill(100 * fieldSize).map((id, index) => id + 2 + index);
+  const res = [...firstLineIds, ...leftLineIds, ...rightLineIds, ...lastLineIds];
+  return res;
+};
+
 export const getFieldSize = (fieldSizeName) => {
   switch (fieldSizeName) {
     case 'ten':
