@@ -14,8 +14,9 @@ export default {
       score: 'Счет',
     },
     alert: {
-      areYouSureRestart: 'При перезапуске игры текущие данные будут потеряны. Вы уверены, что хотите продолжить?',
-      areYouSureChangeSetting: 'Changing setting will restart game and current data will lost. Are you sure that you want to continue?',
+      warning: 'Предупреждение',
+      areYouSureRestart: 'При перезапуске игры текущие данные будут потеряны. Уверены что хотите продолжить?',
+      areYouSureChangeSetting: 'Изменение настроек приведет к перезапуску игры и потере достигнутого прогресса. Уверены что хотите продолжить?',
       continue: 'Продолжить',
       cancel: 'Отменить',
     },

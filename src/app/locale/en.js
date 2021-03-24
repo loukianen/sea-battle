@@ -14,6 +14,7 @@ export default {
       score: 'Score',
     },
     alert: {
+      warning: 'Warning',
       areYouSureRestart: 'The restart game will lose current data. Are you sure that you want to continue?',
       areYouSureChangeSetting: 'Changing setting will restart game and current data will lost. Are you sure that you want to continue?',
       continue: 'Continue',

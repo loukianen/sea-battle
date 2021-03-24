@@ -27,6 +27,19 @@ const getMostCommonValues = (inputValues) => {
   return mostCommonValues;
 };
 
+const validateShipCoords = (field, coords, validationType) => {
+  const gaugeForCoords = [1, field.length - 1];
+  const isCoordsBelongToTheEdge = coords
+    .every(({ x, y }) => (gaugeForCoords.includes(x) && gaugeForCoords.includes(y)));
+  const isCoordsValid = utils.isValidShipCoords(field, coords);
+  const validationMapping = {
+    beginning: isCoordsValid,
+    workAtTheEdge: isCoordsBelongToTheEdge && isCoordsValid,
+    standart: isCoordsValid,
+  };
+  return validationMapping[validationType] ? coords : [];
+};
+
 class Nahimov extends Ushakov {
   constructor() {
     super();
@@ -51,12 +64,12 @@ class Nahimov extends Ushakov {
     if (result === 'offTarget') {
       this.targetOffCount += 1;
       if (this.mode === 'beginning'
-        && this.targetOffCount === this.enemyField.length - 1
+        && this.targetOffCount === this.enemyField.length - 3
         && !this.isGotHit) {
         this.mode = 'workAtTheEdge';
         this.targetOffCount = 0;
       }
-      if (this.mode === 'workAtTheEdge' && this.targetOffCount === this.enemyField.length - 1) {
+      if (this.mode === 'workAtTheEdge' && this.targetOffCount === this.enemyField.length + 2) {
         this.mode = 'standart';
       }
     }
@@ -72,18 +85,16 @@ class Nahimov extends Ushakov {
   }
 
   makeShoot(ship, { cells, cellIds }) {
-    const posibleCoordsForEnemyShips = [];
-    cellIds.forEach((id) => {
-      const addCoordsToList = (coords) => {
-        if (utils.isValidShipCoords(this.getEnemyField(), coords)) {
-          posibleCoordsForEnemyShips.push(...coords);
-        }
-      };
+    const posibleCoordsForEnemyShips = cellIds.reduce((acc, id) => {
+      const validShipCoords = [];
       ship.setCoords(cells[id].coords);
-      addCoordsToList(ship.getCoords());
+      validShipCoords
+        .push(...validateShipCoords(this.getEnemyField(), ship.getCoords(), this.mode));
       ship.changeOrientation();
-      addCoordsToList(ship.getCoords());
-    });
+      validShipCoords
+        .push(...validateShipCoords(this.getEnemyField(), ship.getCoords(), this.mode));
+      return [...acc, ...validShipCoords];
+    }, []);
     const idsFromCoords = posibleCoordsForEnemyShips.map(({ x, y }) => {
       const field = this.getEnemyField();
       return field[y][x].id;
@@ -147,24 +158,24 @@ class Nahimov extends Ushakov {
   }
 
   shoot() {
-    if (this.enemyShipCoords.length > 0) {
+    if (this.enemyShipCoords.length > 0) { // if is wounded enemy ship
       return Ushakov.prototype.shoot.call(this);
     }
     const emptyCells = utils.getEmptyCells(this.getEnemyField());
     if (this.mode === 'workAtTheEdge') {
       return this.shootAtTheEdge(emptyCells);
     }
-    if (this.enemyShipsAmount[0] > 0) {
+    if (this.enemyShipsAmount[0] > 0) { // in search of fourdeck ship
       return this.makeShoot(this.fourDeckShip, emptyCells);
     }
-    if (this.enemyShipsAmount[1] > 0) {
+    if (this.enemyShipsAmount[1] > 0) { // threedeck
       return this.makeShoot(this.threeDeckShip, emptyCells);
     }
-    if (this.enemyShipsAmount[2] > 0) {
+    if (this.enemyShipsAmount[2] > 0) { // doubledeck
       return this.makeShoot(this.doubleDeckShip, emptyCells);
     }
     this.mode = 'standart';
-    return Ushakov.prototype.shoot.call(this);
+    return Ushakov.prototype.shoot.call(this); // usual shoot
   }
 }
 

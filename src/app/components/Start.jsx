@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 import i18next from 'i18next';
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
@@ -37,6 +38,16 @@ const actionCreators = {
 };
 
 class Start extends React.Component {
+  constructor() {
+    super();
+    this.newGameState = null;
+  }
+  startNewGame = () => {
+    const { dispatch, changeGameState, gameOptions, game } = this.props;
+    $('#warningModal').modal('hide');
+    dispatch(changeGameState({ newGameState: this.newGameState, gameOptions, newGame: game }));
+  }
+
   handleClick = (e) => {
     e.preventDefault();
     const {
@@ -50,28 +61,52 @@ class Start extends React.Component {
       userField,
       userFlot,
     } = this.props;
-    const newGameState = getNewGameState(gameState);
-    if (newGameState === 'settingFlot') {
+    this.newGameState = getNewGameState(gameState);
+    if (gameState === 'finished') {
+      dispatch(changeGameState({ newGameState: this.newGameState, gameOptions, newGame: game }));
+    }
+    if (this.newGameState === 'settingFlot') {
       const newGame = new Game(gameOptions);
-      dispatch(changeGameState({ newGameState, gameOptions, newGame }));
-    } else if (newGameState === 'battleIsOn') {
+      dispatch(changeGameState({ newGameState: this.newGameState, gameOptions, newGame }));
+    }
+    if (this.newGameState === 'battleIsOn') {
       if (flot.shipIds.length !== 0) {
         dispatch(showPutYourShips());
       }
       const records = game.start({ userField, userFlot });
-      dispatch(changeGameState({ newGameState, gameOptions, records, newGame: game }));
-    } else {
-      dispatch(changeGameState({ newGameState, gameOptions, newGame: game }));
-    }
+      dispatch(changeGameState({ newGameState: this.newGameState, gameOptions, records, newGame: game }));
+    } 
+    $('#warningModal').modal('show');
   }
-  
+
   render() {
     const { gameState } = this.props;
     const buttonLabel = getButtonLabel(gameState);
     return(
-      <li className="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
+      <div>
+        <div className="modal fade" id="warningModal" tabIndex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="warningModalLabel">{i18next.t('alert.warning')}</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                {i18next.t('alert.areYouSureRestart')}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">{i18next.t('alert.cancel')}</button>
+                <button type="button" className="btn btn-info" onClick={this.startNewGame}>{i18next.t('alert.continue')}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <li className="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
           <a className="btn" type="button" id="navStart" aria-haspopup="true" aria-expanded="false" onClick={this.handleClick}>{buttonLabel}</a>
-      </li>
+        </li>
+      </div>
     );
   }
 }

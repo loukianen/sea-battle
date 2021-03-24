@@ -151,9 +151,8 @@ test('Nahimov special shooting', () => {
   expect(shoot).toEqual({ x: 5, y: 6 });
 });
 
-const shootOffTargetResults = Array(10).fill({ coords: { x: 1, y: 1 }, result: 'offTarget' });
+const shootOffTargetResults = Array(13).fill({ coords: { x: 1, y: 1 }, result: 'offTarget' });
 const gameOptionsForTestSwitch = [
-  { fieldSize: 'three', enemy: 'nahimov', shipType: 'line' },
   { fieldSize: 'five', enemy: 'nahimov', shipType: 'line' },
   { fieldSize: 'seven', enemy: 'nahimov', shipType: 'line' },
   { fieldSize: 'ten', enemy: 'nahimov', shipType: 'line' },
@@ -170,7 +169,7 @@ test.each(dataForTestSwitch)('Nahimov switch to workAtTheEdge mode', (field, flo
   const ai = new Nahimov();
   ai.setFlot(field, flot);
   expect(ai.mode).toBe('beginning');
-  const controlShootOffTargetAmount = field.length - 1;
+  const controlShootOffTargetAmount = field.length - 3;
   shootOffTargetResults
     .slice(0, controlShootOffTargetAmount)
     .forEach((res) => ai.handleSootingResult(res));
@@ -184,7 +183,7 @@ test.each(dataForTestSwitch)('Nahimov to standart mode by offTarget', (field, fl
   ai.setMode('workAtTheEdge');
   expect(ai.mode).toBe('workAtTheEdge');
   expect(ai.targetOffCount).toBe(0);
-  const controlShootOffTargetAmount = field.length - 1;
+  const controlShootOffTargetAmount = field.length + 2;
   shootOffTargetResults.slice(0, controlShootOffTargetAmount).forEach(() => {
     const { x, y } = ai.shoot();
     const shootedCellId = field[y][x].id;
@@ -211,10 +210,6 @@ test.each(dataForTestSwitch)('Nahimov to standart mode by no space', (field, flo
   expect(ai.targetOffCount).toBe(0);
   const shoot = ai.shoot();
   const shootedCellId = field[shoot.y][shoot.x].id;
-  if (field.length > 3) {
-    expect(cellIdsExceptEdgeArea).toContain(shootedCellId);
-    expect(ai.mode).toBe('standart');
-  } else {
-    expect(cellIdsExceptEdgeArea).toContain(cellIds);
-  }
+  expect(cellIdsExceptEdgeArea).toContain(shootedCellId);
+  expect(ai.mode).toBe('standart');
 });

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import $ from 'jquery';
 import i18next from 'i18next';
 import { connect } from 'react-redux';
 import * as actions from '../actions/index';
@@ -35,35 +36,54 @@ const inputData = [
 class Options extends React.Component {
   constructor(props) {
     super(props);
-    this.fieldSize = props.gameOptions.fieldSize;
-    this.enemy = props.gameOptions.enemy;
-    this.shipType = props.gameOptions.shipType;
+    this.options = {
+      fieldSize: null,
+      enemy: null,
+     shipType: null,
+    };
   }
 
   changeGameOptions = (e) => {
     e.preventDefault();
-    const gameOptions = { fieldSize: this.fieldSize, enemy: this.enemy, shipType: this.shipType };
-    const { gameOptions: oldGameOptions, dispatch, setOptions } = this.props;
+    const form = document.getElementById('optionsFopm');
+    this.options.fieldSize = form.elements.fieldSize.value;
+    this.options.enemy = form.elements.enemy.value;
+    this.options.shipType = form.elements.shipType.value;
+    const gameOptions = { ...this.options };
+    const { gameOptions: oldGameOptions, gameState, dispatch, setOptions } = this.props;
     if (!_.isEqual(gameOptions, oldGameOptions)) {
-      dispatch(setOptions({ gameOptions }));
+      if (gameState === 'settingFlot' || gameState === 'battleIsOn') {
+        $('#warningChangeOptionsModal').modal('show');
+      } else {
+        dispatch(setOptions({ gameOptions }));
+      }
     }
   }
 
-  handleClick = (header, value) => () => {
-    this[header] = value;
+  cancelChangeOptions = () => {
+    $('#warningChangeOptionsModal').modal('hide');
+    this.forceUpdate();
+  }
+
+  startChangeOptions = () => {
+    const { dispatch, setOptions } = this.props;
+    const gameOptions = { ...this.options };
+    $('#warningChangeOptionsModal').modal('hide');
+    dispatch(setOptions({ gameOptions }));
   }
 
   renderOption(value, header) {
+    const { gameOptions } = this.props;
     if (header !== 'shipType') {
-      return this[header] === value
-        ? <input className="form-check-input" type="radio" name={header} id={value} value={value} onClick={this.handleClick(header, value)} defaultChecked></input>
-        : <input className="form-check-input" type="radio" name={header} id={value} value={value} onClick={this.handleClick(header, value)}></input>
+      return gameOptions[header] === value
+        ? <input className="form-check-input" type="radio" name={header} id={value} value={value} defaultChecked></input>
+        : <input className="form-check-input" type="radio" name={header} id={value} value={value}></input>
     }
     return <input className="form-check-input" type="radio" name={header} id={value} value={value} checked disabled></input>
   }
 
   renderOptions() {
-    return <form className="d-flex flex-column justify-content-end" onSubmit={this.changeGameOptions}>
+    return <form id="optionsFopm" method="post" className="d-flex flex-column justify-content-end" onSubmit={this.changeGameOptions}>
       {inputData.map((item) => {
         if (item.type === 'divider') {
           return <div key={item.blockId} className="dropdown-divider"></div>;
@@ -80,18 +100,39 @@ class Options extends React.Component {
           </div>
         );
       })}
-      <button type="submit" className="btn btn-outline-info flex-grow-0 m-2">{i18next.t(`optionsMenu.save`)}</button>
+      <button type="submit" className="btn btn-outline-info flex-grow-0 m-2">{i18next.t('optionsMenu.save')}</button>
     </form>;
   }
 
   render() {
     return(
-      <li className="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
-        <a className="btn p-o" type="button" id="navOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{i18next.t('ui.navOptions')}</a>
-        <div className="dropdown-menu" aria-labelledby="OptionsMenuButton">
-          {this.renderOptions()}
+      <div>
+        <div className="modal fade" id="warningChangeOptionsModal" tabIndex="-1" aria-labelledby="warningChangeOptionsModalLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="warningChangeOptionsModalLabel">{i18next.t('alert.warning')}</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                {i18next.t('alert.areYouSureChangeSetting')}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={this.cancelChangeOptions}>{i18next.t('alert.cancel')}</button>
+                <button type="button" className="btn btn-info" onClick={this.startChangeOptions}>{i18next.t('alert.continue')}</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </li>
+        <li className="nav-item shadow-sm p-3 mb-3 bg-white rounded color-ship-border">
+          <a className="btn p-o" type="button" id="navOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{i18next.t('ui.navOptions')}</a>
+          <div className="dropdown-menu" aria-labelledby="OptionsMenuButton">
+            {this.renderOptions()}
+          </div>
+        </li>
+      </div>
     );
   }
 }
