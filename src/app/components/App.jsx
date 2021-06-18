@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions/index';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import * as actions from '../actions/index';
 import Header from './Header.jsx';
 import Fields from './Fields.jsx';
 import en from '../locale/en';

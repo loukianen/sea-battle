@@ -138,24 +138,14 @@ test.each(mappingShipClasses)('Test for ships classification(%s)', (shipClass, s
   });
 });
 
-test('makeFlot with ten size fields and line type ships', () => {
-  const {
-    totalUnits,
-    fourDeckShipsAmount,
-    threeDeckShipsAmount,
-    doubleDeckShipsAmount,
-    oneDeckShipsAmount,
-    uniqIdsAmount,
-  } = makeDataForFlotTesting({ fieldSize: 'ten', shipType: 'line' });
-  expect(totalUnits).toBe(10);
-  expect(fourDeckShipsAmount).toBe(1);
-  expect(threeDeckShipsAmount).toBe(2);
-  expect(doubleDeckShipsAmount).toBe(3);
-  expect(oneDeckShipsAmount).toBe(4);
-  expect(uniqIdsAmount.size).toBe(10);
-});
+const dataForTestMakeFlotFunc = [
+  ['ten', [1, 2, 3, 4]],
+  ['seven', [0, 1, 2, 3]],
+  ['five', [0, 0, 1, 2]],
+  ['three', [0, 0, 0, 1]],
+];
 
-test('makeFlot with three size fields and line type ships', () => {
+test.each(dataForTestMakeFlotFunc)('makeFlot with size fields %s', (fieldSize, expShipsAmount) => {
   const {
     totalUnits,
     fourDeckShipsAmount,
@@ -163,11 +153,13 @@ test('makeFlot with three size fields and line type ships', () => {
     doubleDeckShipsAmount,
     oneDeckShipsAmount,
     uniqIdsAmount,
-  } = makeDataForFlotTesting({ fieldSize: 'three', shipType: 'line' });
-  expect(totalUnits).toBe(1);
-  expect(fourDeckShipsAmount).toBe(0);
-  expect(threeDeckShipsAmount).toBe(0);
-  expect(doubleDeckShipsAmount).toBe(0);
-  expect(oneDeckShipsAmount).toBe(1);
-  expect(uniqIdsAmount.size).toBe(1);
+  } = makeDataForFlotTesting({ fieldSize, shipType: 'line' });
+  const [expectedAmount1, expectedAmount2, expectedAmount3, expectedAmount4] = expShipsAmount;
+  const expectedSumm = expShipsAmount.reduce((acc, item) => acc + item, 0);
+  expect(totalUnits).toBe(expectedSumm);
+  expect(fourDeckShipsAmount).toBe(expectedAmount1);
+  expect(threeDeckShipsAmount).toBe(expectedAmount2);
+  expect(doubleDeckShipsAmount).toBe(expectedAmount3);
+  expect(oneDeckShipsAmount).toBe(expectedAmount4);
+  expect(uniqIdsAmount.size).toBe(expectedSumm);
 });
