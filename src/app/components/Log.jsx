@@ -77,6 +77,6 @@ const Log = (props) => {
       </table>
     </div>
   );
-}
+};
 
 export default connect(mapStateToProps, actionCreators)(Log);
