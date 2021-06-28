@@ -6,49 +6,9 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: './src/index.js',
-  mode: 'production',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/i,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: "babel-loader"
-        }
-      },
-      {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      },
-      {
-        test: /\.(png|jpg|jpeg|svg|gif|webp)$/,
-        include: [
-            path.resolve(__dirname, '/public')
-        ],
-        use: [{
-            loader: 'file-loader',
-            options: {
-                name: '[name].[ext]',
-            }
-        }]
-      },
-      {
-        test: /\.(js)$/,
-        include: [
-            path.resolve(__dirname, '/scripts')
-        ],
-        use: [{
-            loader: 'file-loader',
-            options: {
-                name: '[name].[ext]',
-            }
-        }]
-      },
-    ],
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -70,4 +30,45 @@ module.exports = {
       ],
     }),
   ],
+  devServer: {
+    contentBase: './dist',
+    port: 7800,
+    watchContentBase: true,
+    progress: true
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/i,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.(gif|png|jpg|jpeg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          }
+        ],
+      },
+      {
+        test: /\.(js)$/,
+        include: [
+            path.resolve(__dirname, '/scripts')
+        ],
+        use: [{
+            loader: 'file-loader',
+            options: {
+                name: '[name].[ext]',
+            }
+        }]
+      },
+    ],
+  },
 };
