@@ -28,19 +28,8 @@ export default () => {
     const activePlayer = null;
     const game = null;
     return {
-      activePlayer,
-      billboard,
-      enemyField,
-      flot,
-      game,
-      gameOptions,
-      gameState,
-      language,
-      log,
-      score,
-      shipInMove,
-      userField,
-      userFlot,
+      activePlayer, billboard, enemyField, flot, game, gameOptions, gameState, language, log, score,
+      shipInMove, userField, userFlot,
     };
   };
 
@@ -51,6 +40,6 @@ export default () => {
     <Provider store={store}>
       <App />
     </Provider>,
-    document.querySelector('main')
+    document.querySelector('main'),
   );
 };

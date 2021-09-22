@@ -1,48 +1,30 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import * as actions from '../actions/index';
 import Header from './Header.jsx';
 import Fields from './Fields.jsx';
 import en from '../locale/en';
 import ru from '../locale/ru';
 
-const mapStateToProps = (state) => {
-  const { language } = state;
-  const props = { language };
-  return props;
+const initInternationalization = () => {
+  const resources = { en, ru };
+  i18next
+    .use(LanguageDetector)
+    .init({
+      fallbackLng: 'en',
+      debug: true,
+      resources,
+    });
 };
 
-const actionCreators = {
-  setLanguage: actions.setLanguage,
+const App = () => {
+  initInternationalization();
+  return (
+    <div className="container justify-content-center">
+      <Header />
+      <Fields />
+    </div>
+  );
 };
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.init();
-  }
-
-  init() {
-    const resources = { en, ru };
-    i18next
-      .use(LanguageDetector)
-      .init({
-        fallbackLng: 'en',
-        debug: true,
-        resources,
-      });
-  }
-
-  render() {
-    return (
-      <div className="container justify-content-center">
-        <Header />
-        <Fields />
-      </div>
-    );
-  }
-}
-
-export default connect(mapStateToProps, actionCreators)(App);
+export default App;

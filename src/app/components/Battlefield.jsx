@@ -81,7 +81,7 @@ class Battlefield extends React.Component {
         : { coords, options: [['style', 'ship']] };
     });
   }
-  
+
   handlerDragEnter = (mainPoint) => (e) => {
     e.preventDefault();
     e.stopPropagation();
