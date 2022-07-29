@@ -14,7 +14,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       favicon: './src/public/favicon.ico',
-      filename: 'index.html',
+      filename: 'index.html', // 'yandex_2060048424d728ef.html',
       template: 'src/public/index.html',
     }),
     new MiniCssExtractPlugin(
@@ -27,6 +27,7 @@ module.exports = {
         { from: "src/img", to: "img" },
         { from: "src/css", to: "css" },
         { from: "src/scripts", to: "scripts" },
+        { from: "src/public/yandex_2060048424d728ef.html", to: "yandex_2060048424d728ef.html" },
       ],
     }),
   ],
