@@ -27,6 +27,7 @@ module.exports = {
         { from: "src/img", to: "img" },
         { from: "src/css", to: "css" },
         { from: "src/scripts", to: "scripts" },
+        { from: "src/public/yandex_2060048424d728ef.html", to: "yandex_2060048424d728ef.html" },
       ],
     }),
   ],
